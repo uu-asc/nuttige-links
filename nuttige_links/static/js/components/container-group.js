@@ -41,7 +41,11 @@ export class ContainerGroup extends HTMLElement {
 
     // handlers
     handleToggle = (e) => {
-        this.container.toggleAttribute("open", !e.detail.collapse)
+        e.preventDefault()
+        const collapsed = store.state[this.table].uiCollapsed
+        const next = new Set(collapsed)
+        next.has(this.recordId) ? next.delete(this.recordId) : next.add(this.recordId)
+        store.setState([this.table, 'uiCollapsed'], next)
     }
 
     // life-cycle
@@ -60,6 +64,12 @@ export class ContainerGroup extends HTMLElement {
                 () => this.buildChildren()
             ),
             store.subscribe(
+                s => s[this.table].uiCollapsed.has(this.recordId),
+                (isCollapsed) => {
+                    this.container.toggleAttribute('open', !isCollapsed)
+                }
+            ),
+            store.subscribe(
                 s => s[this.table].uiVisible,
                 (vis) => { this.hidden = vis ? !vis.has(this.recordId) : false }
             ),
@@ -75,7 +85,7 @@ export class ContainerGroup extends HTMLElement {
     }
 
     setupListeners() {
-        document.addEventListener("toggle-collapse", this.handleToggle)
+        this.header.addEventListener('click', this.handleToggle)
     }
 
     renderHeader() {

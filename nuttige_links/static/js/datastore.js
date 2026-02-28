@@ -8,6 +8,7 @@ class DataStore {
                 checkedIds: new Set(),
                 errors: {},
                 uiVisible: null,
+                uiCollapsed: new Set(),
             },
             subsections: {
                 records: {},
@@ -16,6 +17,7 @@ class DataStore {
                 checkedIds: new Set(),
                 errors: {},
                 uiVisible: null,
+                uiCollapsed: new Set(),
             },
             links: {
                 records: {},

@@ -11,15 +11,21 @@ class LinkItem extends HTMLElement {
         this.setAttribute('data-tree-item', '')
         this.setAttribute('data-tree-depth', '2')
 
-        this.unsub = store.subscribe(
-            s => s.links.records[this.recordId],
-            () => this.render()
-        )
+        this.unsubs = [
+            store.subscribe(
+                s => s.links.records[this.recordId],
+                () => this.render()
+            ),
+            store.subscribe(
+                s => s.links.uiVisible,
+                (vis) => { this.hidden = vis ? !vis.has(this.recordId) : false }
+            ),
+        ]
         this.render()
     }
 
     disconnectedCallback() {
-        this.unsub?.()
+        this.unsubs?.forEach(fn => fn())
     }
 
     render() {

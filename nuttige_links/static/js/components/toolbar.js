@@ -31,21 +31,19 @@ class LinkToolbar extends HTMLElement {
         })
 
         this.querySelector('[data-ref="expand-all"]').addEventListener('click', () => {
-            const event = new CustomEvent('toggle-collapse', {
-                detail: {
-                    collapse: false
-                }
+            store.batch(() => {
+                store.setState(['sections', 'uiCollapsed'], new Set())
+                store.setState(['subsections', 'uiCollapsed'], new Set())
             })
-            document.dispatchEvent(event)
         })
 
         this.querySelector('[data-ref="collapse-all"]').addEventListener('click', () => {
-            const event = new CustomEvent('toggle-collapse', {
-                detail: {
-                    collapse: true
-                }
+            store.batch(() => {
+                const allSections = new Set(Object.keys(store.state.sections.records))
+                const allSubs = new Set(Object.keys(store.state.subsections.records))
+                store.setState(['sections', 'uiCollapsed'], allSections)
+                store.setState(['subsections', 'uiCollapsed'], allSubs)
             })
-            document.dispatchEvent(event)
         })
     }
 }
