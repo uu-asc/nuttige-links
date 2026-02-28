@@ -1,0 +1,28 @@
+/* dirty — modified existing item */
+[data-dirty] > details > summary,
+link-item[data-dirty] {
+    border-left: 3px solid oklch(0.75 0.15 85);  /* amber */
+    padding-left: 0.4rem;
+}
+
+/* new — draft without a saved record */
+[data-new] > details > summary,
+link-item[data-new] {
+    border-left: 3px solid oklch(0.7 0.15 145);  /* green */
+    padding-left: 0.4rem;
+}
+
+/* pending delete */
+[data-pending-delete] > details > summary,
+link-item[data-pending-delete] {
+    text-decoration: line-through;
+    opacity: 0.45;
+}
+
+/* empty container */
+[data-empty] > details > summary::after {
+    content: '(empty)';
+    margin-left: 0.5rem;
+    font-style: italic;
+    opacity: 0.5;
+}
