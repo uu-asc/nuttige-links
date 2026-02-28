@@ -7,8 +7,10 @@ class SubsectionGroup extends ContainerGroup {
     childTable = 'links'
 
     buildChildren() {
-        const children = Object.values(store.state.links.records)
-            .filter(record => record.subsection_id === this.recordId)
+        const children = Object.values({
+            ...store.state.links.records,
+            ...store.state.links.drafts,
+        }).filter(r => r.subsection_id === this.recordId)
             .sort((a, b) => a.position - b.position)
 
         const existing = new Map()

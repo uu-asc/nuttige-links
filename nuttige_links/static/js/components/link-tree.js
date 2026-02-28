@@ -5,7 +5,7 @@ class LinkTree extends HTMLElement {
     connectedCallback() {
         this.setAttribute('role', 'tree')
         this.unsub = store.subscribe(
-            s => s.sections.records,
+            s => [s.sections.records, s.sections.drafts],
             () => this.buildChildren()
         )
         this.buildChildren()
@@ -16,8 +16,10 @@ class LinkTree extends HTMLElement {
     }
 
     buildChildren() {
-        const sections = Object.values(store.state.sections.records)
-            .sort((a, b) => a.position - b.position)
+        const sections = Object.values({
+            ...store.state.sections.records,
+            ...store.state.sections.drafts,
+        }).sort((a, b) => a.position - b.position)
 
         const existing = new Map()
         for (const el of this.querySelectorAll(':scope > section-group')) {

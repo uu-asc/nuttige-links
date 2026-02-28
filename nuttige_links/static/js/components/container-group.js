@@ -69,7 +69,7 @@ export class ContainerGroup extends HTMLElement {
                 () => this.renderHeader()
             ),
             store.subscribe(
-                s => s[this.childTable].records,
+                s => [s[this.childTable].records, s[this.childTable].drafts],
                 () => {
                     this.buildChildren()
                     this.toggleAttribute('data-empty', this.childContainer.children.length === 0)
@@ -83,7 +83,12 @@ export class ContainerGroup extends HTMLElement {
             ),
             store.subscribe(
                 s => s[this.table].uiVisible,
-                (vis) => { this.hidden = vis ? !vis.has(this.recordId) : false }
+                (vis) => {
+                    const isDraft = this.recordId in store.state[this.table].drafts
+                    const isRecord = this.recordId in store.state[this.table].records
+                    const isDraftOnly = isDraft && !isRecord
+                    this.hidden = isDraftOnly ? false : (vis ? !vis.has(this.recordId) : false)
+                },
             ),
             store.subscribe(
                 s => s[this.table].drafts[this.recordId],

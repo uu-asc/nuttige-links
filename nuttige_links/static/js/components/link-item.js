@@ -1,14 +1,12 @@
 import { store } from '../datastore.js'
 
 class LinkItem extends HTMLElement {
-    table = 'links'
-
     // state
     get recordId() { return this.getAttribute('record-id') }
 
     get record() {
-        return store.state[this.table].drafts[this.recordId]
-            ?? store.state[this.table].records[this.recordId]
+        return store.state.links.drafts[this.recordId]
+            ?? store.state.links.records[this.recordId]
     }
 
     syncDirtyState() {
@@ -30,8 +28,13 @@ class LinkItem extends HTMLElement {
                 () => this.render()
             ),
             store.subscribe(
-                s => s[this.table].uiVisible,
-                (vis) => { this.hidden = vis ? !vis.has(this.recordId) : false }
+                s => s.links.uiVisible,
+                (vis) => {
+                    const isDraft = this.recordId in store.state.links.drafts
+                    const isRecord = this.recordId in store.state.links.records
+                    const isDraftOnly = isDraft && !isRecord
+                    this.hidden = isDraftOnly ? false : (vis ? !vis.has(this.recordId) : false)
+                },
             ),
             store.subscribe(
                 s => s.links.drafts[this.recordId],
