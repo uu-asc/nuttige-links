@@ -4,9 +4,7 @@ import { computeVisibility } from '../behaviors/filter.js'
 class LinkToolbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
-            <input type="text" placeholder="Filter..." data-ref="filter">
-            <label><input type="checkbox" data-ref="links-only"> Links only</label>
-            <label><input type="checkbox" data-ref="broken-only"> Broken only</label>
+            <filter-input></filter-input>
             <button data-ref="expand-all">Expand all</button>
             <button data-ref="collapse-all">Collapse all</button>
         `
@@ -15,18 +13,13 @@ class LinkToolbar extends HTMLElement {
         this.linksOnlyBox = this.querySelector('[data-ref="links-only"]')
         this.brokenOnlyBox = this.querySelector('[data-ref="broken-only"]')
 
-        this.filterInput.addEventListener('input', () => {
-            store.setState(['ui', 'filterTerm'], this.filterInput.value)
-            computeVisibility()
-        })
-
-        this.linksOnlyBox.addEventListener('change', () => {
-            store.setState(['ui', 'linksOnly'], this.linksOnlyBox.checked)
-            computeVisibility()
-        })
-
-        this.brokenOnlyBox.addEventListener('change', () => {
-            store.setState(['ui', 'showBrokenOnly'], this.brokenOnlyBox.checked)
+        this.querySelector('filter-input').addEventListener('filter-change', (e) => {
+            const { term, linksOnly, brokenOnly } = e.detail
+            store.batch(() => {
+                store.setState(['ui', 'filterTerm'], term)
+                store.setState(['ui', 'linksOnly'], linksOnly)
+                store.setState(['ui', 'showBrokenOnly'], brokenOnly)
+            })
             computeVisibility()
         })
 
