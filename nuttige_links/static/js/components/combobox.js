@@ -10,6 +10,13 @@ const css = /*css*/`
     box-sizing: border-box;
 }
 
+:host([disabled]) {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: default;
+    user-select: none;
+}
+
 .trigger {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -144,10 +151,28 @@ mark {
 `
 
 export class Combobox extends HTMLElement {
-    // === State ===
+    static get observedAttributes() { return ['disabled'] }
+
+    get template() {
+        return `
+            <div class="trigger">
+                <input type="text" autocomplete="off" />
+                <span class="new-badge">new</span>
+                <button class="chevron" tabindex="-1">▾</button>
+            </div>
+            <div id="dropdown" popover="manual"></div>
+        `
+    }
+
+    // state
     _options = []
     _value = null           // { id, isNew: false } | { name, isNew: true } | null
     _dropdownFilter = ''    // filter local to browsing the dropdown
+
+    get disabled() { return this.hasAttribute('disabled') }
+    set disabled(val) {
+        val ? this.setAttribute('disabled', '') : this.removeAttribute('disabled')
+    }
 
     get options() { return this._options }
     set options(list) {
@@ -160,13 +185,14 @@ export class Combobox extends HTMLElement {
         this._value = v
         this.syncInputDisplay()
         this.syncCreatingState()
+        this.updateSelectedState()
     }
 
     get selectedId() { return this._value?.isNew === false ? this._value.id : null }
     set selectedId(id) {
         if (!id) { this.value = null; return }
         const opt = this._options.find(o => o.id === id)
-        if (opt) this.value = { id: opt.id, isNew: false }
+        if (opt) this.value = Combobox.existing(opt.id)
     }
 
     get hasExactMatch() {
@@ -183,18 +209,18 @@ export class Combobox extends HTMLElement {
 
     get isOpen() { return this._open }
 
-    // === DOM refs ===
+    // DOM
     get input() { return this.shadowRoot.querySelector('input') }
     get triggerEl() { return this.shadowRoot.querySelector('.trigger') }
     get chevron() { return this.shadowRoot.querySelector('.chevron') }
     get dropdown() { return this.shadowRoot.querySelector('#dropdown') }
 
-    // === Handlers ===
+    // handlers
     handleInput = () => {
         this.syncCreatingState()
         if (!this.isOpen) this.open()
         // input typing filters dropdown as a preview
-        this.applyInputFilter()
+        this.applyFilter(this.input.value.trim().toLowerCase(), { allowCreate: true })
     }
 
     handleChevronMousedown = (e) => {
@@ -257,14 +283,12 @@ export class Combobox extends HTMLElement {
                 break
             case 'Backspace':
                 e.preventDefault()
-                this._dropdownFilter = this._dropdownFilter.slice(0, -1)
-                this.applyDropdownFilter()
+                this.applyTypeAhead(this._dropdownFilter.slice(0, -1))
                 break
             default:
                 if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
                     e.preventDefault()
-                    this._dropdownFilter += e.key
-                    this.applyDropdownFilter()
+                    this.applyTypeAhead(this._dropdownFilter + e.key)
                 }
                 break
         }
@@ -282,7 +306,7 @@ export class Combobox extends HTMLElement {
         }
     }
 
-    // === Lifecycle ===
+    // life-cycle
     constructor() {
         super()
         this.attachShadow({ mode: 'open' })
@@ -293,15 +317,7 @@ export class Combobox extends HTMLElement {
         const sheet = new CSSStyleSheet()
         sheet.replaceSync(css)
         this.shadowRoot.adoptedStyleSheets = [sheet]
-
-        this.shadowRoot.innerHTML = `
-            <div class="trigger">
-                <input type="text" autocomplete="off" />
-                <span class="new-badge">new</span>
-                <button class="chevron" tabindex="-1">▾</button>
-            </div>
-            <div id="dropdown" popover="manual"></div>
-        `
+        this.shadowRoot.innerHTML = this.template
 
         this.input.addEventListener('input', this.handleInput)
         this.input.addEventListener('keydown', this.handleInputKeydown)
@@ -313,13 +329,26 @@ export class Combobox extends HTMLElement {
         this.rebuildOptions()
         this.syncInputDisplay()
         this.syncCreatingState()
+
+        if (this.hasAttribute('disabled')) {
+            this.input.toggleAttribute('disabled', true)
+            this.triggerEl.toggleAttribute('disabled', true)
+        }
     }
 
-    // === Open / Close ===
+    attributeChangedCallback(name, _, val) {
+        if (name === 'disabled') {
+            const off = val !== null
+            this.input?.toggleAttribute('disabled', off)
+            this.triggerEl?.toggleAttribute('disabled', off)
+            if (off) this.close()
+        }
+    }
+
+    // open / close
     open() {
-        if (this._open) return
+        if (this._open || this.disabled) return
         this._open = true
-        this._dropdownFilter = ''
         this.dropdown.showPopover()
         this.triggerEl.classList.add('open')
         this.chevron.textContent = '▴'
@@ -335,28 +364,21 @@ export class Combobox extends HTMLElement {
     close() {
         if (!this._open) return
         this._open = false
-        this._dropdownFilter = ''
         this.dropdown.hidePopover()
         this.triggerEl.classList.remove('open')
         this.chevron.textContent = '▾'
         this.clearDropdownFilter()
     }
 
-    // === Option selection ===
+    // option selection
     selectOption(el) {
         const id = el.dataset.id
         const createName = el.dataset.createName
 
-        if (createName) {
-            this._value = { name: createName, isNew: true }
-        } else if (id) {
-            this._value = { id, isNew: false }
-        } else {
-            this._value = null
-        }
+        if (createName) this.value = Combobox.newEntry(createName)
+        else if (id) this.value = Combobox.existing(id)
+        else this.value = null
 
-        this.syncInputDisplay()
-        this.syncCreatingState()
         this.updateSelectedState()
         this.close()
         this.input.focus()
@@ -376,13 +398,7 @@ export class Combobox extends HTMLElement {
 
         const exact = this._options.find(o => o.name.toLowerCase() === text.toLowerCase())
         if (exact) {
-            if (this._value?.id !== exact.id) {
-                this._value = { id: exact.id, isNew: false }
-                this.input.value = exact.name
-                this.syncCreatingState()
-                this.updateSelectedState()
-                this.emitChange()
-            }
+            this.value = Combobox.existing(exact.id)
         } else {
             if (!this._value?.isNew || this._value?.name !== text) {
                 this._value = { name: text, isNew: true }
@@ -399,36 +415,17 @@ export class Combobox extends HTMLElement {
         }))
     }
 
-    // === Filtering ===
+    // filtering
 
-    // input text filters dropdown (while typing in input)
-    applyInputFilter() {
-        const text = this.input.value.trim().toLowerCase()
-        this.filterAndHighlight(text, { allowCreate: true })
+    applyFilter(term, { allowCreate = false } = {}) {
+        const anyVisible = this.updateOptionVisibility(term)
+        const createVisible = this.updateCreateOption(term, allowCreate)
+        this.updateNoMatch(term, anyVisible, createVisible)
     }
 
-    // type-ahead within dropdown
-    applyDropdownFilter() {
-        const f = this._dropdownFilter.toLowerCase()
-        this.filterAndHighlight(f, { allowCreate: false })
-
-        if (!this.dropdown.contains(this.shadowRoot.activeElement)) return
-
-        // focus first visible match, or no-match element to keep focus in dropdown
-        const first = this.dropdown.querySelector('.option:not(.hidden):not(.option-create)')
-        if (first) {
-            first.focus()
-        } else {
-            const noMatch = this.dropdown.querySelector('.no-match:not(.hidden)')
-            noMatch?.focus()
-        }
-    }
-
-    filterAndHighlight(term, { allowCreate = false } = {}) {
-        const options = this.dropdown.querySelectorAll('.option:not(.option-create)')
+    updateOptionVisibility(term) {
         let anyVisible = false
-
-        for (const el of options) {
+        for (const el of this.dropdown.querySelectorAll('.option:not(.option-create)')) {
             const name = el.dataset.name ?? ''
             if (!term) {
                 el.classList.remove('hidden')
@@ -436,7 +433,6 @@ export class Combobox extends HTMLElement {
                 anyVisible = true
                 continue
             }
-
             const idx = name.toLowerCase().indexOf(term)
             if (idx === -1) {
                 el.classList.add('hidden')
@@ -449,45 +445,32 @@ export class Combobox extends HTMLElement {
                 anyVisible = true
             }
         }
+        return anyVisible
+    }
 
-        // update create option (only when typing in input)
+    updateCreateOption(term, allowCreate) {
         const createEl = this.dropdown.querySelector('.option-create')
-        if (createEl) {
-            if (allowCreate && term && !this._options.some(o => o.name.toLowerCase() === term)) {
-                createEl.classList.remove('hidden')
-                createEl.dataset.createName = term
-                createEl.textContent = `Create: ${term}`
-            } else {
-                createEl.classList.add('hidden')
-            }
-        }
+        if (!createEl) return false
+        const show = allowCreate && !!term && !this._options.some(o => o.name.toLowerCase() === term)
+        createEl.classList.toggle('hidden', !show)
+        if (show) { createEl.dataset.createName = term; createEl.textContent = `Create: ${term}` }
+        return show
+    }
 
-        // no-match indicator (only when create isn't shown)
+    updateNoMatch(term, anyVisible, createVisible) {
         const noMatch = this.dropdown.querySelector('.no-match')
-        if (noMatch) {
-            const createVisible = createEl && !createEl.classList.contains('hidden')
-            if (term && !anyVisible && !createVisible) {
-                noMatch.classList.remove('hidden')
-                noMatch.textContent = `No match: ${term}`
-            } else {
-                noMatch.classList.add('hidden')
-            }
-        }
+        if (!noMatch) return
+        const show = !!term && !anyVisible && !createVisible
+        noMatch.classList.toggle('hidden', !show)
+        if (show) noMatch.textContent = `No match: ${term}`
     }
 
     clearDropdownFilter() {
-        const options = this.dropdown.querySelectorAll('.option')
-        for (const el of options) {
-            el.classList.remove('hidden')
-            if (el.dataset.name) el.innerHTML = esc(el.dataset.name)
-        }
-        const createEl = this.dropdown.querySelector('.option-create')
-        if (createEl) createEl.classList.add('hidden')
-        const noMatch = this.dropdown.querySelector('.no-match')
-        if (noMatch) noMatch.classList.add('hidden')
+        this._dropdownFilter = ''
+        this.applyFilter('', { allowCreate: false })
     }
 
-    // === Render ===
+    // render
     syncInputDisplay() {
         if (!this.input) return
         if (!this._value) {
@@ -546,7 +529,17 @@ export class Combobox extends HTMLElement {
         }
     }
 
-    // === Focus helpers ===
+    // helpers
+    static existing(id) { return { id, isNew: false } }
+    static newEntry(name) { return { name, isNew: true } }
+
+    applyTypeAhead(filter) {
+        this._dropdownFilter = filter
+        this.applyFilter(filter.toLowerCase(), { allowCreate: false })
+        this.focusFirstAfterFilter()
+    }
+
+    // focus helpers
     focusFirstVisibleOption() {
         this.dropdown.querySelector('.option:not(.hidden)')?.focus()
     }
@@ -567,6 +560,13 @@ export class Combobox extends HTMLElement {
         while (el && el.classList.contains('hidden')) el = el.previousElementSibling
         if (el) el.focus()
         else this.input.focus()
+    }
+
+    focusFirstAfterFilter() {
+        if (!this.dropdown.contains(this.shadowRoot.activeElement)) return
+        const first = this.dropdown.querySelector('.option:not(.hidden):not(.option-create)')
+        if (first) first.focus()
+        else this.dropdown.querySelector('.no-match:not(.hidden)')?.focus()
     }
 
     focus() {
