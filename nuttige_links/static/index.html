@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuttige Links</title>
     <link rel="stylesheet" href="/static/css/dirty-states.css">
+    <link rel="stylesheet" href="/static/css/stylesheet.css">
     <script type="module" src="static/js/main.js"></script>
 </head>
 <body>
@@ -13,12 +14,14 @@
         <div class="toolbar">
             <button data-action="save-all" disabled>Save</button>
             <button data-action="revert-all" disabled>Revert</button>
+            <bulk-actions-bar></bulk-actions-bar>
         </div>
         <darkmode-toggle></darkmode-toggle>
     </header>
     <main id="app">
         <link-toolbar></link-toolbar>
         <link-tree></link-tree>
+        <link-dialog></link-dialog>
     </main>
 </body>
 </html>
