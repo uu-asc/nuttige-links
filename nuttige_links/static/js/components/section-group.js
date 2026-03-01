@@ -6,6 +6,10 @@ class SectionGroup extends ContainerGroup {
     table = 'sections'
     childTable = 'subsections'
 
+    getAddDefaults() {
+        return { section_id: this.recordId }
+    }
+
     buildChildren() {
         const children = Object.values({
             ...store.state.subsections.records,

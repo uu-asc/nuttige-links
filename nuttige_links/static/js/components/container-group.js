@@ -6,14 +6,19 @@ export class ContainerGroup extends HTMLElement {
 
     get template() {
         return `
-            <details open>
-                <summary></summary>
-                <div class="children"></div>
-            </details>
-        `
+        <details open>
+            <summary>
+                <span class="name"></span>
+                <tree-actions></tree-actions>
+            </summary>
+            <div class="children">
+                <button class="add-item" data-action="add-link">+ Add link</button>
+            </div>
+        </details>
+    `
     }
 
-    // State
+    // state
     get recordId() {
         return this.getAttribute('record-id')
     }
@@ -25,6 +30,10 @@ export class ContainerGroup extends HTMLElement {
 
     get collapsed() {
         return store.state[this.table].uiCollapsed.has(this.recordId)
+    }
+
+    getAddDefaults() {
+        return {}
     }
 
     syncDirtyState() {
@@ -59,9 +68,10 @@ export class ContainerGroup extends HTMLElement {
 
     // life-cycle
     connectedCallback() {
+        this.dataset.table = this.table
+        this.dataset.treeItem = ''
+        this.dataset.treeDepth = '0'
         this.innerHTML = this.template
-        this.setAttribute('data-tree-item', '')
-        this.setAttribute('data-tree-depth', '0')
 
         this.unsubs = [
             store.subscribe(
@@ -111,13 +121,24 @@ export class ContainerGroup extends HTMLElement {
     }
 
     setupListeners() {
-        this.header.addEventListener('click', this.handleToggle)
+        this.header.addEventListener('click', (e) => {
+            if (e.target.closest('tree-actions')) return
+            this.handleToggle(e)
+        })
+
+        this.querySelector('.add-item').addEventListener('click', () => {
+            store.setState(['ui', 'dialog'], {
+                mode: 'add',
+                table: 'links',
+                defaults: this.getAddDefaults(),
+            })
+        })
     }
 
     // render
     renderHeader() {
         if (!this.record) return
-        this.header.textContent = this.record.name
+        this.header.querySelector('.name').textContent = this.record.name
     }
 
     buildChildren() {

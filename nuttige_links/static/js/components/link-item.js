@@ -1,4 +1,5 @@
 import { store } from '../datastore.js'
+import { markForDelete } from '../behaviors/actions.js'
 
 class LinkItem extends HTMLElement {
     // state
@@ -19,8 +20,9 @@ class LinkItem extends HTMLElement {
 
     // life-cycle
     connectedCallback() {
-        this.setAttribute('data-tree-item', '')
-        this.setAttribute('data-tree-depth', '2')
+        this.dataset.table = 'links'
+        this.dataset.treeItem = ''
+        this.dataset.treeDepth = '2'
 
         this.unsubs = [
             store.subscribe(
@@ -48,10 +50,18 @@ class LinkItem extends HTMLElement {
 
         this.syncDirtyState()
         this.render()
+        this.setupListeners()
     }
 
     disconnectedCallback() {
         this.unsubs?.forEach(fn => fn())
+    }
+
+    setupListeners() {
+        this.addEventListener('click', (e) => {
+            if (e.target.closest('tree-actions')) return
+            // future: row click behavior if needed
+        })
     }
 
     // render
@@ -85,6 +95,9 @@ class LinkItem extends HTMLElement {
             desc.textContent = this.record.description
             this.appendChild(desc)
         }
+
+        const actions = document.createElement('tree-actions')
+        this.appendChild(actions)
     }
 }
 

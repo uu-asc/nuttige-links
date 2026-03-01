@@ -6,6 +6,13 @@ class SubsectionGroup extends ContainerGroup {
     table = 'subsections'
     childTable = 'links'
 
+    getAddDefaults() {
+        return {
+            section_id: this.record.section_id,
+            subsection_id: this.recordId,
+        }
+    }
+
     buildChildren() {
         const children = Object.values({
             ...store.state.links.records,
