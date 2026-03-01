@@ -8,6 +8,7 @@ import './components/toolbar.js'
 import './components/filter-input.js'
 import './components/combobox.js'
 import './components/tree-actions.js'
+import './components/link-dialog.js'
 
 function isTableDirty(state, table) {
     return Object.keys(state[table].drafts).length > 0

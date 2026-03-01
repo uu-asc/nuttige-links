@@ -521,6 +521,7 @@ export class Combobox extends HTMLElement {
     }
 
     updateSelectedState() {
+        if (!this.dropdown) return
         const currentId = this._value?.isNew === false ? this._value.id : null
         for (const el of this.dropdown.querySelectorAll('.option')) {
             el.toggleAttribute('aria-selected',
