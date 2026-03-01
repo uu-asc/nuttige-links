@@ -7,6 +7,7 @@ class LinkToolbar extends HTMLElement {
             <filter-input></filter-input>
             <button data-ref="expand-all">Expand all</button>
             <button data-ref="collapse-all">Collapse all</button>
+            <button data-ref="add-link">+ Add link</button>
         `
 
         this.filterInput = this.querySelector('[data-ref="filter"]')
@@ -37,6 +38,10 @@ class LinkToolbar extends HTMLElement {
                 store.setState(['sections', 'uiCollapsed'], allSections)
                 store.setState(['subsections', 'uiCollapsed'], allSubs)
             })
+        })
+
+        this.querySelector('[data-ref="add-link"]').addEventListener('click', () => {
+            store.setState(['ui', 'dialog'], { mode: 'add', table: 'links', defaults: {} })
         })
     }
 }
