@@ -43,17 +43,14 @@ subsection-group .checkbox {
     visibility: hidden;
 }
 
-link-item:hover .checkbox,
-section-group > details > summary:hover .checkbox,
-subsection-group > details > summary:hover .checkbox {
+body[data-edit-mode] link-item:hover .checkbox,
+body[data-edit-mode] section-group > details > summary:hover .checkbox,
+body[data-edit-mode] subsection-group > details > summary:hover .checkbox {
     visibility: visible;
 }
 
-link-tree[data-any-checked] link-item .checkbox,
-link-tree[data-any-checked] section-group .checkbox,
-link-tree[data-any-checked] subsection-group .checkbox {
-    visibility: visible;
-}
+body[data-edit-mode] link-tree[data-any-checked] .checkbox { visibility: visible; }
+body[data-edit-mode] details[open] tree-actions { visibility: visible; }
 
 /* item styling */
 section-group > details > .container-header {

@@ -29,6 +29,7 @@ class DataStore {
                 uiVisible: null,
             },
             ui: {
+                editMode: false,
                 dialog: null,
                 filterTerm: '',
                 showBrokenOnly: false,

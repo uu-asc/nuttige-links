@@ -1,1 +1,17 @@
 [hidden] { display: none !important; }
+
+/* hidden outside edit mode */
+.checkbox, tree-actions, .add-item,
+[data-action="save-all"], [data-action="revert-all"],
+[data-action="add-link"], bulk-actions-bar {
+    display: none;
+}
+
+/* edit mode: restore existing behavior */
+body[data-edit-mode] .checkbox              { display: revert; visibility: hidden; }
+body[data-edit-mode] tree-actions           { display: grid; visibility: hidden; }
+body[data-edit-mode] .add-item              { display: revert; }
+body[data-edit-mode] [data-action="save-all"],
+body[data-edit-mode] [data-action="revert-all"],
+body[data-edit-mode] [data-action="add-link"],
+body[data-edit-mode] bulk-actions-bar       { display: revert; }

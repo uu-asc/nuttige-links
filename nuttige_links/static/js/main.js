@@ -29,10 +29,18 @@ async function init() {
     await sync.load('links')
     computeVisibility()
 
+    const editBtn = document.querySelector('[data-action="toggle-edit"]')
     const saveBtn = document.querySelector('[data-action="save-all"]')
     const revertBtn = document.querySelector('[data-action="revert-all"]')
     const linkTree = document.querySelector('link-tree')
 
+    store.subscribe(
+        s => s.ui.editMode,
+        (on) => {
+            document.body.toggleAttribute('data-edit-mode', on)
+            editBtn.textContent = on ? '✎ Done' : '✎ Edit'
+        }
+    )
     store.subscribe(isDirty, (dirty) => {
         saveBtn.disabled = !dirty
         revertBtn.disabled = !dirty
@@ -42,6 +50,10 @@ async function init() {
         s => s.sections.checkedIds.size + s.subsections.checkedIds.size + s.links.checkedIds.size,
         count => linkTree.toggleAttribute('data-any-checked', count > 0)
     )
+
+    editBtn.addEventListener('click', () => {
+        store.setState(['ui', 'editMode'], !store.state.ui.editMode)
+    })
 
     saveBtn.addEventListener('click', async () => {
         await sync.save('sections')
