@@ -1,0 +1,93 @@
+@font-face {
+  font-family: 'Bungee Hairline';
+  src: url('../fonts/BungeeHairline-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/OpenSans-VariableFont_wdth,wght.ttf');
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf');
+  font-style: italic;
+  font-display: swap;
+}
+
+/* main elements */
+header h1 {
+    font-family: "Bungee Hairline", sans-serif;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: .875em;
+}
+
+:where(.container-header, link-item):hover {
+    background-color: var(--bg-muted);
+    border-radius: 5px;
+}
+
+/* checkbox visibility */
+link-item .checkbox,
+section-group .checkbox,
+subsection-group .checkbox {
+    visibility: hidden;
+}
+
+link-item:hover .checkbox,
+section-group > details > summary:hover .checkbox,
+subsection-group > details > summary:hover .checkbox {
+    visibility: visible;
+}
+
+link-tree[data-any-checked] link-item .checkbox,
+link-tree[data-any-checked] section-group .checkbox,
+link-tree[data-any-checked] subsection-group .checkbox {
+    visibility: visible;
+}
+
+/* tree-action visibility */
+tree-actions {
+    visibility: hidden;
+}
+
+details[open] tree-actions {
+    visibility: visible;
+}
+
+/* container-groups */
+.container-header {
+    font-weight: bold;
+}
+
+section-group > details > .container-header {
+    font-size: 1.5rem;
+}
+
+/* action buttons */
+[data-action] {
+    align-self: center;
+    height: 1rem;
+    color: currentColor;
+    font-size: .6125rem;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--bg-emphasis);
+    }
+}
+
+a {
+    color: currentColor;
+}

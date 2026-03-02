@@ -5,14 +5,16 @@ class LinkToolbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <filter-input></filter-input>
-            <button data-ref="expand-all">Expand all</button>
-            <button data-ref="collapse-all">Collapse all</button>
-            <button data-ref="add-link">+ Add link</button>
+            <div class="buttons">
+                <button data-action="expand-all">Expand all</button>
+                <button data-action="collapse-all">Collapse all</button>
+                <button data-action="add-link">+ Add link</button>
+            </div>
         `
 
-        this.filterInput = this.querySelector('[data-ref="filter"]')
-        this.linksOnlyBox = this.querySelector('[data-ref="links-only"]')
-        this.brokenOnlyBox = this.querySelector('[data-ref="broken-only"]')
+        this.filterInput = this.querySelector('[data-action="filter"]')
+        this.linksOnlyBox = this.querySelector('[data-action="links-only"]')
+        this.brokenOnlyBox = this.querySelector('[data-action="broken-only"]')
 
         this.querySelector('filter-input').addEventListener('filter-change', (e) => {
             const { term, linksOnly, brokenOnly } = e.detail
@@ -24,14 +26,14 @@ class LinkToolbar extends HTMLElement {
             computeVisibility()
         })
 
-        this.querySelector('[data-ref="expand-all"]').addEventListener('click', () => {
+        this.querySelector('[data-action="expand-all"]').addEventListener('click', () => {
             store.batch(() => {
                 store.setState(['sections', 'uiCollapsed'], new Set())
                 store.setState(['subsections', 'uiCollapsed'], new Set())
             })
         })
 
-        this.querySelector('[data-ref="collapse-all"]').addEventListener('click', () => {
+        this.querySelector('[data-action="collapse-all"]').addEventListener('click', () => {
             store.batch(() => {
                 const allSections = new Set(Object.keys(store.state.sections.records))
                 const allSubs = new Set(Object.keys(store.state.subsections.records))
@@ -40,7 +42,7 @@ class LinkToolbar extends HTMLElement {
             })
         })
 
-        this.querySelector('[data-ref="add-link"]').addEventListener('click', () => {
+        this.querySelector('[data-action="add-link"]').addEventListener('click', () => {
             store.setState(['ui', 'dialog'], { mode: 'add', table: 'links', defaults: {} })
         })
     }

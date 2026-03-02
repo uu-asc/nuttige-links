@@ -4,20 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuttige Links</title>
+    <script>
+        document.documentElement.dataset.scheme =
+            localStorage.getItem('prefers-color-scheme') ??
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    </script>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/styling.css">
     <link rel="stylesheet" href="/static/css/dirty-states.css">
-    <link rel="stylesheet" href="/static/css/stylesheet.css">
     <script type="module" src="static/js/main.js"></script>
 </head>
 <body>
     <header>
         <h1>Nuttige Links</h1>
-        <div class="toolbar">
-            <button data-action="save-all" disabled>Save</button>
-            <button data-action="revert-all" disabled>Revert</button>
-            <bulk-actions-bar></bulk-actions-bar>
-        </div>
         <darkmode-toggle></darkmode-toggle>
     </header>
+    <div class="toolbar">
+        <button data-action="save-all" disabled>Save</button>
+        <button data-action="revert-all" disabled>Revert</button>
+        <bulk-actions-bar></bulk-actions-bar>
+    </div>
     <main id="app">
         <link-toolbar></link-toolbar>
         <link-tree></link-tree>

@@ -134,6 +134,7 @@ class LinkDialog extends HTMLElement {
 
     // life-cycle
     constructor() {
+        super()
         this.attachShadow({ mode: 'open' })
         this.shadowRoot.innerHTML = template
 

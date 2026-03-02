@@ -31,11 +31,17 @@ async function init() {
 
     const saveBtn = document.querySelector('[data-action="save-all"]')
     const revertBtn = document.querySelector('[data-action="revert-all"]')
+    const linkTree = document.querySelector('link-tree')
 
     store.subscribe(isDirty, (dirty) => {
         saveBtn.disabled = !dirty
         revertBtn.disabled = !dirty
     })
+
+    store.subscribe(
+        s => s.sections.checkedIds.size + s.subsections.checkedIds.size + s.links.checkedIds.size,
+        count => linkTree.toggleAttribute('data-any-checked', count > 0)
+    )
 
     saveBtn.addEventListener('click', async () => {
         await sync.save('sections')

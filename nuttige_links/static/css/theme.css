@@ -1,0 +1,22 @@
+:root {
+    --bg: hsl(0, 0%, 100%);
+    --fg: hsl(0, 0%, 7%);
+    --bg-surface: hsl(0, 0%, 98%);
+    --bg-muted: hsl(0, 0%, 94%);
+    --bg-emphasis: hsl(0, 0%, 88%);
+    --bg-border: hsl(0, 0%, 80%);
+}
+
+[data-scheme="dark"] {
+    --bg: hsl(0, 0%, 10%);
+    --fg: hsl(0, 0%, 91%);
+    --bg-surface: hsl(0, 0%, 14%);
+    --bg-muted: hsl(0, 0%, 18%);
+    --bg-emphasis: hsl(0, 0%, 22%);
+    --bg-border: hsl(0, 0%, 27%);
+}
+
+body {
+    background: var(--bg);
+    color: var(--fg);
+}

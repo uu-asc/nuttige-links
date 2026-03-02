@@ -7,18 +7,18 @@ export class ContainerGroup extends HTMLElement {
     get template() {
         return `
         <details open>
-            <summary>
+            <summary class="container-header">
+                <input type="checkbox" class="checkbox">
                 <span class="name"></span>
+                <button class="add-item" data-action="add-link">+ add</button>
                 <tree-actions></tree-actions>
             </summary>
             <div class="children">
-                <button class="add-item" data-action="add-link">+ Add link</button>
             </div>
         </details>
     `
     }
 
-    // state
     get recordId() {
         return this.getAttribute('record-id')
     }
@@ -44,7 +44,6 @@ export class ContainerGroup extends HTMLElement {
         this.toggleAttribute('data-pending-delete', pendingDeletes.has(id))
     }
 
-    // DOM
     get container() {
         return this.querySelector("details")
     }
@@ -57,7 +56,6 @@ export class ContainerGroup extends HTMLElement {
         return this.querySelector(".children")
     }
 
-    // handlers
     handleToggle = (e) => {
         e.preventDefault()
         const collapsed = store.state[this.table].uiCollapsed
@@ -66,7 +64,6 @@ export class ContainerGroup extends HTMLElement {
         store.setState([this.table, 'uiCollapsed'], next)
     }
 
-    // life-cycle
     connectedCallback() {
         this.dataset.table = this.table
         this.dataset.treeItem = ''
@@ -108,6 +105,13 @@ export class ContainerGroup extends HTMLElement {
                 s => s[this.table].pendingDeletes,
                 () => this.syncDirtyState()
             ),
+            store.subscribe(
+                s => s[this.table].checkedIds.has(this.recordId),
+                (checked) => {
+                    const cb = this.querySelector('summary > .checkbox')
+                    if (cb) cb.checked = checked
+                }
+            ),
         ]
 
         this.syncDirtyState()
@@ -122,8 +126,18 @@ export class ContainerGroup extends HTMLElement {
 
     setupListeners() {
         this.header.addEventListener('click', (e) => {
-            if (e.target.closest('tree-actions')) return
+            if (e.target.closest('tree-actions') || e.target.matches('.checkbox')) return
             this.handleToggle(e)
+        })
+
+        this.header.addEventListener('change', (e) => {
+            if (!e.target.matches('.checkbox')) return
+            e.stopPropagation()
+            const t = this.table
+            const id = this.recordId
+            const next = new Set(store.state[t].checkedIds)
+            next.has(id) ? next.delete(id) : next.add(id)
+            store.setState([t, 'checkedIds'], next)
         })
 
         this.querySelector('.add-item').addEventListener('click', () => {
@@ -135,7 +149,6 @@ export class ContainerGroup extends HTMLElement {
         })
     }
 
-    // render
     renderHeader() {
         if (!this.record) return
         this.header.querySelector('.name').textContent = this.record.name
@@ -145,4 +158,3 @@ export class ContainerGroup extends HTMLElement {
         throw new Error('Subclass must implement buildChildren')
     }
 }
-

@@ -2,7 +2,6 @@ import { store } from '../datastore.js'
 import { markForDelete } from '../behaviors/actions.js'
 
 class LinkItem extends HTMLElement {
-    // state
     get recordId() { return this.getAttribute('record-id') }
 
     get record() {
@@ -18,7 +17,6 @@ class LinkItem extends HTMLElement {
         this.toggleAttribute('data-pending-delete', pendingDeletes.has(id))
     }
 
-    // life-cycle
     connectedCallback() {
         this.dataset.table = 'links'
         this.dataset.treeItem = ''
@@ -46,6 +44,13 @@ class LinkItem extends HTMLElement {
                 s => s.links.pendingDeletes,
                 () => this.syncDirtyState()
             ),
+            store.subscribe(
+                s => s.links.checkedIds.has(this.recordId),
+                (checked) => {
+                    const cb = this.querySelector('.checkbox')
+                    if (cb) cb.checked = checked
+                }
+            ),
         ]
 
         this.syncDirtyState()
@@ -58,29 +63,35 @@ class LinkItem extends HTMLElement {
     }
 
     setupListeners() {
-        this.addEventListener('click', (e) => {
-            if (e.target.closest('tree-actions')) return
-            // future: row click behavior if needed
+        this.addEventListener('change', e => {
+            if (!e.target.matches('.checkbox')) return
+            const next = new Set(store.state.links.checkedIds)
+            next.has(this.recordId) ? next.delete(this.recordId) : next.add(this.recordId)
+            store.setState(['links', 'checkedIds'], next)
         })
     }
 
-    // render
     render() {
         if (!this.record) return
 
         this.textContent = ''
 
-        // status dot
-        const dot = document.createElement('span')
-        dot.className = 'status-dot'
-        if (this.record.last_status === null || this.record.last_status === undefined) {
-            dot.dataset.status = 'unchecked'
-        } else if (this.record.last_status >= 200 && this.record.last_status < 400) {
-            dot.dataset.status = 'ok'
-        } else {
-            dot.dataset.status = 'broken'
-        }
-        this.appendChild(dot)
+        const cb = document.createElement('input')
+        cb.type = 'checkbox'
+        cb.className = 'checkbox'
+        cb.checked = store.state.links.checkedIds.has(this.recordId)
+        this.appendChild(cb)
+
+        // const dot = document.createElement('span')
+        // dot.className = 'status-dot'
+        // if (this.record.last_status === null || this.record.last_status === undefined) {
+        //     dot.dataset.status = 'unchecked'
+        // } else if (this.record.last_status >= 200 && this.record.last_status < 400) {
+        //     dot.dataset.status = 'ok'
+        // } else {
+        //     dot.dataset.status = 'broken'
+        // }
+        // this.appendChild(dot)
 
         const a = document.createElement('a')
         a.href = this.record.url
