@@ -15,16 +15,16 @@ const css = /*css*/`
     display: grid;
     grid-template-columns: 1fr auto auto;
     gap: .5rem;
-    padding-inline: .5rem;
-    padding-block: .25rem;
+    padding-inline: .125rem;
+    padding-block: .125rem;
     border: 1px solid currentColor;
     border-right: none;
     border-radius: 5px 0 0 5px;
 }
 
 input[type="text"] {
-    padding-block: .25rem;
-    padding-inline: 1rem;
+    padding-block: .125rem;
+    padding-inline: .5rem;
     border: none;
     background-color: transparent;
     color: inherit;

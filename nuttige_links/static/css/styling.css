@@ -23,6 +23,7 @@
 /* main elements */
 header h1 {
     font-family: "Bungee Hairline", sans-serif;
+    font-size: 2.5rem;
 }
 
 body {
@@ -54,6 +55,21 @@ link-tree[data-any-checked] subsection-group .checkbox {
     visibility: visible;
 }
 
+/* item styling */
+section-group > details > .container-header {
+    padding-block: .5rem;
+    padding-inline: .25rem;
+}
+subsection-group > details > .container-header {
+    padding-block: .375rem;
+    padding-inline: .25rem;
+}
+link-item {
+    padding-block: .25rem;
+    padding-inline: .25rem;
+    text-wrap: balance;
+}
+
 /* tree-action visibility */
 tree-actions {
     visibility: hidden;
@@ -75,7 +91,6 @@ section-group > details > .container-header {
 /* action buttons */
 [data-action] {
     align-self: center;
-    height: 1rem;
     color: currentColor;
     font-size: .6125rem;
     background: transparent;
