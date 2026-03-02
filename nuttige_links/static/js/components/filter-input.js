@@ -2,7 +2,6 @@ const css = /*css*/`
 :host {
     display: grid;
     grid-template-columns: 1fr auto;
-    color: inherit;
 }
 
 :host *,
@@ -29,6 +28,7 @@ input[type="text"] {
     font-size: .875em;
     outline: none;
     min-width: 0;
+    color: inherit;
 }
 
 button {
@@ -41,8 +41,8 @@ button {
     border: none;
     border-radius: 5px;
     background-color: transparent;
-    color: inherit;
     padding-inline: .5rem;
+    color: inherit;
 }
 
 button:hover {
