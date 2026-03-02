@@ -82,6 +82,10 @@ class LinkItem extends HTMLElement {
         cb.checked = store.state.links.checkedIds.has(this.recordId)
         this.appendChild(cb)
 
+        const spacer = document.createElement('span')
+        spacer.className = 'chevron-spacer'
+        this.appendChild(spacer)
+
         // const dot = document.createElement('span')
         // dot.className = 'status-dot'
         // if (this.record.last_status === null || this.record.last_status === undefined) {

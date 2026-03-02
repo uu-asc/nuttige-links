@@ -9,6 +9,7 @@ export class ContainerGroup extends HTMLElement {
         <details open>
             <summary class="container-header">
                 <input type="checkbox" class="checkbox">
+                <span class="chevron">▸</span>
                 <span class="name"></span>
                 <button class="add-item" data-action="add-link">+ add</button>
                 <tree-actions></tree-actions>

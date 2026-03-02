@@ -14,7 +14,6 @@ const css = /*css*/`
 .search-container {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    gap: .5rem;
     padding-inline: .125rem;
     padding-block: .125rem;
     border: 1px solid currentColor;
@@ -27,8 +26,7 @@ input[type="text"] {
     padding-inline: .5rem;
     border: none;
     background-color: transparent;
-    color: inherit;
-    font: inherit;
+    font-size: .875em;
     outline: none;
     min-width: 0;
 }

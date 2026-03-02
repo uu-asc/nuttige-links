@@ -9,6 +9,9 @@ class LinkToolbar extends HTMLElement {
                 <button data-action="expand-all">Expand all</button>
                 <button data-action="collapse-all">Collapse all</button>
                 <button data-action="add-link">+ Add link</button>
+                <hr>
+                <button data-action="save-all" disabled>Save</button>
+                <button data-action="revert-all" disabled>Revert</button>
             </div>
         `
 

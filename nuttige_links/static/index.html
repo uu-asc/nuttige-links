@@ -19,16 +19,14 @@
 <body>
     <header>
         <h1>Nuttige Links</h1>
+        <div class="toolbar">
+            <link-toolbar></link-toolbar>
+            <bulk-actions-bar></bulk-actions-bar>
+        </div>
         <button data-action="toggle-edit">✎ Edit</button>
         <darkmode-toggle></darkmode-toggle>
     </header>
-    <div class="toolbar">
-        <button data-action="save-all" disabled>Save</button>
-        <button data-action="revert-all" disabled>Revert</button>
-        <bulk-actions-bar></bulk-actions-bar>
-    </div>
     <main id="app">
-        <link-toolbar></link-toolbar>
         <link-tree></link-tree>
         <link-dialog></link-dialog>
     </main>

@@ -1,12 +1,53 @@
 header {
-    display: flex;
+    display: grid;
     align-items: center;
+    gap: 1rem;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas:
+        "head tool edit dark";
+    margin-bottom: 1rem;
+
+    @media (width < 1100px) {
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas:
+            "head edit dark"
+            "tool tool tool";
+        row-gap: 0;
+        padding-bottom: .5rem;
+    }
 
     h1 {
+        grid-area: head;
         margin-block: 0;
+        margin-right: 2rem;
     }
+
+    .toolbar {
+        grid-area: tool;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
     darkmode-toggle {
+        grid-area: dark;
+    }
+    [data-action="toggle-edit"] {
+        grid-area: edit;
         margin-left: auto;
+    }
+
+}
+
+link-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+
+    .buttons {
+        display: flex;
+        gap: .5rem;
     }
 }
 
@@ -41,26 +82,17 @@ link-item {
 }
 
 .container-header {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1.25rem 1fr auto;
 }
 link-item {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1.25rem 1fr;
 }
 
 body[data-edit-mode] .container-header {
-    grid-template-columns: 1rem 1fr auto 2rem;
+    grid-template-columns: 1rem 1.25rem 1fr auto 2rem;
 }
 body[data-edit-mode] link-item {
-    grid-template-columns: 1rem 1fr 2rem;
-}
-
-link-toolbar {
-    display: flex;
-    margin-bottom: 1rem;
-
-    .buttons {
-        margin-left: auto;
-    }
+    grid-template-columns: 1rem 1.25rem 1fr 2rem;
 }
 
 tree-actions {
