@@ -50,6 +50,19 @@ export class ContainerGroup extends HTMLElement {
         this.toggleAttribute('data-pending-delete', pendingDeletes.has(id))
     }
 
+    syncCollapsed() {
+        const isCollapsed = store.state[this.table].uiCollapsed.has(this.recordId)
+        this.container.toggleAttribute('open', !isCollapsed)
+    }
+
+    syncVisibility() {
+        const vis = store.state[this.table].uiVisible
+        const isDraft = this.recordId in store.state[this.table].drafts
+        const isRecord = this.recordId in store.state[this.table].records
+        const isDraftOnly = isDraft && !isRecord
+        this.hidden = isDraftOnly ? false : (vis ? !vis.has(this.recordId) : false)
+    }
+
     get container() {
         return this.querySelector("details")
     }
@@ -82,7 +95,14 @@ export class ContainerGroup extends HTMLElement {
                 () => this.renderHeader()
             ),
             store.subscribe(
-                s => [s[this.childTable].records, s[this.childTable].drafts],
+                s => s[this.childTable].records,
+                () => {
+                    this.buildChildren()
+                    this.toggleAttribute('data-empty', this.childContainer.children.length === 0)
+                }
+            ),
+            store.subscribe(
+                s => s[this.childTable].drafts,
                 () => {
                     this.buildChildren()
                     this.toggleAttribute('data-empty', this.childContainer.children.length === 0)
@@ -121,6 +141,9 @@ export class ContainerGroup extends HTMLElement {
         ]
 
         this.syncDirtyState()
+        this.syncCollapsed()
+        this.syncVisibility()
+
         this.renderHeader()
         this.buildChildren()
         this.setupListeners()

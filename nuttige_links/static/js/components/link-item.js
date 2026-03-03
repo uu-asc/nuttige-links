@@ -22,6 +22,14 @@ class LinkItem extends HTMLElement {
         this.toggleAttribute('data-pending-delete', pendingDeletes.has(id))
     }
 
+    syncVisibility() {
+        const vis = store.state.links.uiVisible
+        const isDraft = this.recordId in store.state.links.drafts
+        const isRecord = this.recordId in store.state.links.records
+        const isDraftOnly = isDraft && !isRecord
+        this.hidden = isDraftOnly ? false : (vis ? !vis.has(this.recordId) : false)
+    }
+
     connectedCallback() {
         this.dataset.table = 'links'
         this.dataset.treeItem = ''
@@ -59,6 +67,7 @@ class LinkItem extends HTMLElement {
         ]
 
         this.syncDirtyState()
+        this.syncVisibility()
         this.render()
         this.setupListeners()
     }
