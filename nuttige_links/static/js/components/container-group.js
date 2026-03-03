@@ -131,16 +131,6 @@ export class ContainerGroup extends HTMLElement {
             this.handleToggle(e)
         })
 
-        this.header.addEventListener('change', (e) => {
-            if (!e.target.matches('.checkbox')) return
-            e.stopPropagation()
-            const t = this.table
-            const id = this.recordId
-            const next = new Set(store.state[t].checkedIds)
-            next.has(id) ? next.delete(id) : next.add(id)
-            store.setState([t, 'checkedIds'], next)
-        })
-
         this.querySelector('.add-item').addEventListener('click', () => {
             store.setState(['ui', 'dialog'], {
                 mode: 'add',

@@ -1,5 +1,6 @@
 import { store } from '../datastore.js'
 import { bulkMarkForDelete } from '../behaviors/actions.js'
+import { deselectAll, selectAllVisible } from '../behaviors/selection.js'
 
 class BulkActionsBar extends HTMLElement {
     connectedCallback() {

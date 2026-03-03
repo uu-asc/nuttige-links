@@ -2,6 +2,7 @@ import { store } from './datastore.js'
 import { sync } from './sync.js'
 import { fetchAdapter } from './adapters/fetch-adapter.js'
 import { computeVisibility } from './behaviors/filter.js'
+import { initSelection, selectAllVisible, deselectAll } from './behaviors/selection.js'
 import './vendor/darkmode-toggle.js'
 import './components/link-tree.js'
 import './components/toolbar.js'
@@ -29,6 +30,7 @@ async function init() {
     await sync.load('subsections')
     await sync.load('links')
     computeVisibility()
+    initSelection(document.querySelector('link-tree'))
 
     const editBtn = document.querySelector('[data-action="toggle-edit"]')
     const saveBtn = document.querySelector('[data-action="save-all"]')

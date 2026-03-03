@@ -62,14 +62,7 @@ class LinkItem extends HTMLElement {
         this.unsubs?.forEach(fn => fn())
     }
 
-    setupListeners() {
-        this.addEventListener('change', e => {
-            if (!e.target.matches('.checkbox')) return
-            const next = new Set(store.state.links.checkedIds)
-            next.has(this.recordId) ? next.delete(this.recordId) : next.add(this.recordId)
-            store.setState(['links', 'checkedIds'], next)
-        })
-    }
+    setupListeners() { }
 
     render() {
         if (!this.record) return
