@@ -50,6 +50,11 @@ export class ContainerGroup extends HTMLElement {
         this.toggleAttribute('data-pending-delete', pendingDeletes.has(id))
     }
 
+    syncChecked() {
+        const isChecked = store.state[this.table].checkedIds.has(this.recordId)
+        this.checkbox.checked = isChecked
+    }
+
     syncCollapsed() {
         const isCollapsed = store.state[this.table].uiCollapsed.has(this.recordId)
         this.container.toggleAttribute('open', !isCollapsed)
@@ -73,6 +78,10 @@ export class ContainerGroup extends HTMLElement {
 
     get childContainer() {
         return this.querySelector(".children")
+    }
+
+    get checkbox() {
+        return this.querySelector('summary > .checkbox')
     }
 
     handleToggle = (e) => {
@@ -134,12 +143,12 @@ export class ContainerGroup extends HTMLElement {
             store.subscribe(
                 s => s[this.table].checkedIds.has(this.recordId),
                 (checked) => {
-                    const cb = this.querySelector('summary > .checkbox')
-                    if (cb) cb.checked = checked
+                    if (this.checkbox) this.checkbox.checked = checked
                 }
             ),
         ]
 
+        this.syncChecked()
         this.syncDirtyState()
         this.syncCollapsed()
         this.syncVisibility()
