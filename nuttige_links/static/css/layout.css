@@ -40,6 +40,8 @@ header {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        height: 2rem;
+        padding-inline: .25rem;
     }
 
     darkmode-toggle {

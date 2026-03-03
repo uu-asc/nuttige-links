@@ -8,6 +8,7 @@ class LinkToolbar extends HTMLElement {
             <div class="buttons">
                 <button data-action="expand-all">Expand all</button>
                 <button data-action="collapse-all">Collapse all</button>
+                <hr>
                 <button data-action="reorder-sections">⇅ Sections</button>
                 <button data-action="add-link">+ Add link</button>
                 <hr>

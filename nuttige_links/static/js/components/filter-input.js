@@ -13,6 +13,7 @@ const css = /*css*/`
 .search-container {
     display: grid;
     grid-template-columns: 1fr auto auto;
+    gap: .125rem;
     padding-inline: .125rem;
     padding-block: .125rem;
     border: 1px solid currentColor;
