@@ -5,19 +5,21 @@ import { deselectAll, selectAllVisible } from '../behaviors/selection.js'
 class BulkActionsBar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
+            <hr>
             <span data-ref="count"></span>
-            <button data-ref="edit">Edit</button>
+            <button data-action="edit">Edit</button>
             <span data-ref="hint" hidden></span>
-            <button data-ref="delete">Delete</button>
-            <button data-ref="deselect">Deselect all</button>
+            <button data-action="delete">Delete</button>
+            <button data-action="deselect">Deselect all</button>
         `
 
         this._countEl = this.querySelector('[data-ref="count"]')
-        this._editBtn = this.querySelector('[data-ref="edit"]')
+        this._editBtn = this.querySelector('[data-action="edit"]')
         this._hintEl = this.querySelector('[data-ref="hint"]')
-        this._deleteBtn = this.querySelector('[data-ref="delete"]')
+        this._deleteBtn = this.querySelector('[data-action="delete"]')
+        this._deselectBtn = this.querySelector('[data-action="deselect"]')
 
-        this.querySelector('[data-ref="edit"]').addEventListener('click', () => {
+        this._editBtn.addEventListener('click', () => {
             const { links } = this._selection()
             if (!links.size) return
             store.setState(['ui', 'dialog'], {
@@ -27,7 +29,7 @@ class BulkActionsBar extends HTMLElement {
             })
         })
 
-        this.querySelector('[data-ref="delete"]').addEventListener('click', () => {
+        this._deleteBtn.addEventListener('click', () => {
             const { sections, subsections, links } = this._selection()
             store.batch(() => {
                 if (sections.size) bulkMarkForDelete('sections', [...sections])
@@ -36,7 +38,7 @@ class BulkActionsBar extends HTMLElement {
             })
         })
 
-        this.querySelector('[data-ref="deselect"]').addEventListener('click', () => {
+        this._deselectBtn.addEventListener('click', () => {
             store.batch(() => {
                 store.setState(['sections', 'checkedIds'], new Set())
                 store.setState(['subsections', 'checkedIds'], new Set())
@@ -69,7 +71,6 @@ class BulkActionsBar extends HTMLElement {
         const { sections, subsections, links } = this._selection()
         const total = sections.size + subsections.size + links.size
 
-        this.hidden = total === 0
         if (total === 0) return
 
         const mixed = (sections.size + subsections.size) > 0 && links.size > 0

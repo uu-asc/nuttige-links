@@ -6,6 +6,7 @@ import { initSelection, selectAllVisible, deselectAll } from './behaviors/select
 import './vendor/darkmode-toggle.js'
 import './components/link-tree.js'
 import './components/toolbar.js'
+import './components/bulk-actions-bar.js'
 import './components/filter-input.js'
 import './components/combobox.js'
 import './components/tree-actions.js'

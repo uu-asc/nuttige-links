@@ -19,7 +19,7 @@ header {
     grid-template-areas:
         "head tool edit dark";
 
-    @media (width < 1100px) {
+    @media (width < 1200px) {
         grid-template-columns: 1fr auto auto;
         grid-template-areas:
             "head edit dark"
@@ -35,13 +35,8 @@ header {
         user-select: none;
     }
 
-    .toolbar {
+    link-toolbar {
         grid-area: tool;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        height: 2rem;
-        padding-inline: .25rem;
     }
 
     darkmode-toggle {
@@ -60,11 +55,20 @@ link-toolbar {
     flex-wrap: wrap;
     align-items: center;
     gap: .5rem;
+    height: 2rem;
 
-    .buttons {
-        display: flex;
+    .edit-actions {
         gap: .5rem;
     }
+}
+
+bulk-actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+
+    font-size: .6125rem;
 }
 
 main {

@@ -5,9 +5,9 @@ class LinkToolbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <filter-input></filter-input>
-            <div class="buttons">
-                <button data-action="expand-all">Expand all</button>
-                <button data-action="collapse-all">Collapse all</button>
+            <button data-action="expand-all">Expand all</button>
+            <button data-action="collapse-all">Collapse all</button>
+            <div class="edit-actions">
                 <hr>
                 <button data-action="reorder-sections">⇅ Sections</button>
                 <button data-action="add-link">+ Add link</button>
@@ -15,11 +15,23 @@ class LinkToolbar extends HTMLElement {
                 <button data-action="save-all" disabled>Save</button>
                 <button data-action="revert-all" disabled>Revert</button>
             </div>
+            <bulk-actions-bar hidden></bulk-actions-bar>
         `
 
         this.filterInput = this.querySelector('[data-action="filter"]')
         this.linksOnlyBox = this.querySelector('[data-action="links-only"]')
         this.brokenOnlyBox = this.querySelector('[data-action="broken-only"]')
+
+        const editActions = this.querySelector('.edit-actions')
+        const bulkBar = this.querySelector('bulk-actions-bar')
+
+        store.subscribe(
+            s => s.sections.checkedIds.size + s.subsections.checkedIds.size + s.links.checkedIds.size,
+            (count) => {
+                editActions.hidden = count > 0
+                bulkBar.hidden = count === 0
+            }
+        )
 
         this.querySelector('filter-input').addEventListener('filter-change', (e) => {
             const { term, linksOnly, brokenOnly } = e.detail
