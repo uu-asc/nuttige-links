@@ -91,6 +91,7 @@ link-tree {
 section-group {
     display: block;
     margin-bottom: 1.5rem;
+    break-inside: avoid
 }
 
 subsection-group {

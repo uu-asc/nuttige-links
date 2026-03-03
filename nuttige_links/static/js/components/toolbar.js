@@ -8,6 +8,7 @@ class LinkToolbar extends HTMLElement {
             <div class="buttons">
                 <button data-action="expand-all">Expand all</button>
                 <button data-action="collapse-all">Collapse all</button>
+                <button data-action="reorder-sections">⇅ Sections</button>
                 <button data-action="add-link">+ Add link</button>
                 <hr>
                 <button data-action="save-all" disabled>Save</button>
@@ -42,6 +43,12 @@ class LinkToolbar extends HTMLElement {
                 const allSubs = new Set(Object.keys(store.state.subsections.records))
                 store.setState(['sections', 'uiCollapsed'], allSections)
                 store.setState(['subsections', 'uiCollapsed'], allSubs)
+            })
+        })
+
+        this.querySelector('[data-action="reorder-sections"]').addEventListener('click', () => {
+            store.setState(['ui', 'dialog'], {
+                mode: 'reorder-sections',
             })
         })
 

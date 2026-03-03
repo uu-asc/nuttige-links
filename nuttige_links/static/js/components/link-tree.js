@@ -33,11 +33,12 @@ class LinkTree extends HTMLElement {
 
         // add new
         for (const section of sections) {
-            if (!existing.has(section.id)) {
-                const el = document.createElement('section-group')
+            let el = existing.get(section.id)
+            if (!el) {
+                el = document.createElement('section-group')
                 el.setAttribute('record-id', section.id)
-                this.appendChild(el)
             }
+            this.appendChild(el)
         }
     }
 }

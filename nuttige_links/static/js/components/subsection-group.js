@@ -30,11 +30,12 @@ class SubsectionGroup extends ContainerGroup {
         }
 
         for (const link of children) {
-            if (!existing.has(link.id)) {
-                const el = document.createElement('link-item')
+            let el = existing.get(link.id)
+            if (!el) {
+                el = document.createElement('link-item')
                 el.setAttribute('record-id', link.id)
-                this.childContainer.appendChild(el)
             }
+            this.childContainer.appendChild(el)
         }
     }
 }

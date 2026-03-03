@@ -27,11 +27,12 @@ class SectionGroup extends ContainerGroup {
         }
 
         for (const sub of children) {
-            if (!existing.has(sub.id)) {
-                const el = document.createElement('subsection-group')
+            let el = existing.get(sub.id)
+            if (!el) {
+                el = document.createElement('subsection-group')
                 el.setAttribute('record-id', sub.id)
-                this.childContainer.appendChild(el)
             }
+            this.childContainer.appendChild(el)
         }
     }
 }

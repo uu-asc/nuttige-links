@@ -11,6 +11,8 @@ import './components/combobox.js'
 import './components/tree-actions.js'
 import './components/link-dialog.js'
 import './components/container-dialog.js'
+import './components/reorder-sections-dialog.js'
+import './components/sortable-list.js'
 
 function isTableDirty(state, table) {
     return Object.keys(state[table].drafts).length > 0

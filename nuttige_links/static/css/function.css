@@ -1,21 +1,46 @@
-[hidden] { display: none !important; }
+[hidden] {
+    display: none !important;
+}
 
 /* hidden outside edit mode */
-.checkbox, tree-actions, .add-item, hr,
-[data-action="save-all"], [data-action="revert-all"],
-[data-action="add-link"], bulk-actions-bar {
+.checkbox,
+tree-actions,
+.add-item,
+hr,
+[data-action="save-all"],
+[data-action="reorder-sections"],
+[data-action="revert-all"],
+[data-action="add-link"],
+bulk-actions-bar {
     display: none;
 }
 
 /* edit mode */
-body[data-edit-mode] .checkbox              { display: revert; visibility: hidden; }
-body[data-edit-mode] tree-actions           { display: grid; visibility: hidden; }
-body[data-edit-mode] .add-item              { display: revert; }
-body[data-edit-mode] hr                     { display: revert; }
+body[data-edit-mode] .checkbox {
+    display: revert;
+    visibility: hidden;
+}
+
+body[data-edit-mode] tree-actions {
+    display: grid;
+    visibility: hidden;
+}
+
+body[data-edit-mode] .add-item {
+    display: revert;
+}
+
+body[data-edit-mode] hr {
+    display: revert;
+}
+
+body[data-edit-mode] [data-action="reorder-sections"],
 body[data-edit-mode] [data-action="save-all"],
 body[data-edit-mode] [data-action="revert-all"],
 body[data-edit-mode] [data-action="add-link"],
-body[data-edit-mode] bulk-actions-bar       { display: revert; }
+body[data-edit-mode] bulk-actions-bar {
+    display: revert;
+}
 
 /* tree-action visibility */
 tree-actions {
@@ -34,10 +59,15 @@ subsection-group .checkbox {
 }
 
 body[data-edit-mode] link-item:hover .checkbox,
-body[data-edit-mode] section-group > details > summary:hover .checkbox,
-body[data-edit-mode] subsection-group > details > summary:hover .checkbox {
+body[data-edit-mode] section-group>details>summary:hover .checkbox,
+body[data-edit-mode] subsection-group>details>summary:hover .checkbox {
     visibility: visible;
 }
 
-body[data-edit-mode] link-tree[data-any-checked] .checkbox { visibility: visible; }
-body[data-edit-mode] details[open] tree-actions { visibility: visible; }
+body[data-edit-mode] link-tree[data-any-checked] .checkbox {
+    visibility: visible;
+}
+
+body[data-edit-mode] details[open] tree-actions {
+    visibility: visible;
+}

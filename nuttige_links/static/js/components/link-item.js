@@ -12,7 +12,12 @@ class LinkItem extends HTMLElement {
     syncDirtyState() {
         const { records, drafts, pendingDeletes } = store.state.links
         const id = this.recordId
-        this.toggleAttribute('data-dirty', id in drafts && id in records)
+
+        const draft = drafts[id]
+        const record = records[id]
+        const posOnly = this.isPositionOnlyDraft(draft, record)
+
+        this.toggleAttribute('data-dirty', id in drafts && id in records && !posOnly)
         this.toggleAttribute('data-new', id in drafts && !(id in records))
         this.toggleAttribute('data-pending-delete', pendingDeletes.has(id))
     }
@@ -106,6 +111,13 @@ class LinkItem extends HTMLElement {
 
         const actions = document.createElement('tree-actions')
         this.appendChild(actions)
+    }
+
+    isPositionOnlyDraft(draft, record) {
+        if (!draft || !record) return false
+        return Object.keys(draft).every(k =>
+            k === 'position' || draft[k] === record[k]
+        )
     }
 }
 
