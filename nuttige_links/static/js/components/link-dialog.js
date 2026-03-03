@@ -51,7 +51,7 @@ class LinkDialog extends BaseDialog {
     }
 
     _shouldOpen(config) {
-        return config.table === 'links'
+        return (config.mode === 'add' || config.mode === 'edit') && config.table === 'links'
     }
 
     _setupListeners() {

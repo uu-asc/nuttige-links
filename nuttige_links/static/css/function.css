@@ -4,6 +4,7 @@
 
 /* hidden outside edit mode */
 .checkbox,
+.add-item,
 tree-actions,
 hr,
 .edit-actions,
@@ -22,16 +23,14 @@ body[data-edit-mode] tree-actions {
     visibility: hidden;
 }
 
-body[data-edit-mode] .edit-actions {
-    display: flex;
-}
-
-body[data-edit-mode] hr {
-    display: revert;
-}
-
+body[data-edit-mode] .edit-actions,
 body[data-edit-mode] bulk-actions-bar {
     display: flex;
+}
+
+body[data-edit-mode] .add-item,
+body[data-edit-mode] hr {
+    display: revert;
 }
 
 /* tree-action visibility */

@@ -40,7 +40,11 @@ body {
     border-radius: 5px;
 }
 
-/* toolbar */
+a {
+    color: currentColor;
+}
+
+/* toolbars */
 hr {
     border: none;
     border-left: 1px dotted currentColor;
@@ -102,8 +106,14 @@ section-group>details>.container-header {
     &:hover {
         background: var(--bg-emphasis);
     }
+
+    &:disabled {
+        opacity: 0.45;
+        cursor: default;
+        pointer-events: none;
+    }
 }
 
-a {
-    color: currentColor;
+[data-ref] {
+    font-style: italic;
 }
