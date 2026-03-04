@@ -75,6 +75,11 @@ button:hover:not(:disabled) {
     background: var(--bg-muted, #f5f5f5);
 }
 
+button:focus-visible {
+    outline: 2px solid var(--fg-accent, highlight);
+    outline-offset: -1px;
+}
+
 button:disabled {
     opacity: 0.45;
     cursor: default;
@@ -106,6 +111,7 @@ export class BaseDialog extends HTMLElement {
         this._dialog = this.shadowRoot.querySelector('dialog')
         this._title = this.shadowRoot.querySelector('h2')
         this._btnSave = this.shadowRoot.querySelector('#btn-save')
+        this._btnCancel = this.shadowRoot.querySelector('#btn-cancel')
 
         this._dialog.addEventListener('click', e => {
             if (e.target === this._dialog) this._requestClose()
@@ -114,8 +120,7 @@ export class BaseDialog extends HTMLElement {
             e.preventDefault()
             this._requestClose()
         })
-        this.shadowRoot.querySelector('#btn-cancel')
-            .addEventListener('click', () => this._requestClose())
+        this._btnCancel.addEventListener('click', () => this._requestClose())
         this._btnSave.addEventListener('click', () => this._save())
         this.shadowRoot.addEventListener('keydown', e => this._onKeydown(e))
 
@@ -146,7 +151,13 @@ export class BaseDialog extends HTMLElement {
 
     _requestClose() { store.setState(['ui', 'dialog'], null) }
 
+    _allowsArrowNav(el) {
+        const tag = el.tagName
+        return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON'
+    }
+
     _onKeydown(e) {
+        // alt+arrows always navigate between fields
         if (e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
             e.preventDefault()
             e.stopPropagation()
@@ -154,6 +165,23 @@ export class BaseDialog extends HTMLElement {
             return
         }
 
+        // plain up/down for elements that don't use arrows internally
+        if (!e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp')
+            && this._allowsArrowNav(e.target)) {
+            e.preventDefault()
+            this._moveFocus(e.key === 'ArrowDown' ? 1 : -1)
+            return
+        }
+
+        // left/right between action buttons
+        if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight')
+            && e.target.closest('.actions')) {
+            e.preventDefault()
+            this._moveActionButton(e.key === 'ArrowRight' ? 1 : -1, e.target)
+            return
+        }
+
+        // Enter advances through fields / saves
         if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
             e.preventDefault()
             const items = this._focusables
@@ -167,9 +195,29 @@ export class BaseDialog extends HTMLElement {
         }
     }
 
+    _getNavItems() {
+        const items = [...this._focusables]
+        const cancel = this._btnCancel
+
+        if (cancel && !items.includes(cancel)) {
+            const saveIdx = items.indexOf(this._btnSave)
+            if (saveIdx === -1) items.push(cancel)
+            else items.splice(saveIdx, 0, cancel)
+        }
+
+        return items.filter(el => !el.disabled && !el.hidden)
+    }
+
     _moveFocus(dir) {
-        const items = this._focusables
+        const items = this._getNavItems()
         const idx = items.indexOf(this.shadowRoot.activeElement)
         items[idx + dir]?.focus()
+    }
+
+    _moveActionButton(dir, current) {
+        const btns = [...this.shadowRoot.querySelectorAll('.actions button')]
+            .filter(b => !b.hidden && !b.disabled)
+        const idx = btns.indexOf(current)
+        btns[idx + dir]?.focus()
     }
 }
