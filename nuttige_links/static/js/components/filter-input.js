@@ -17,7 +17,7 @@ const css = /*css*/`
     align-items: center;
     padding-inline: .125rem;
     padding-block: .125rem;
-    border: 1px solid currentColor;
+    border: 1px solid var(--bg-strong);
     border-right: none;
     border-radius: 5px 0 0 5px;
 }
@@ -58,7 +58,7 @@ button.active {
 
 button[data-command="clear"] {
     border-radius: 0 5px 5px 0;
-    border: 1px solid currentColor;
+    border: 1px solid var(--bg-strong);
     font-size: 1em;
     line-height: 1;
 }

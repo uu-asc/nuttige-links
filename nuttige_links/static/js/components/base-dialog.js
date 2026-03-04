@@ -4,7 +4,7 @@ const sharedCss = /*css*/`
 :host { display: contents; }
 
 dialog {
-    border: 1px solid var(--bg-border, #ccc);
+    border: 1px solid var(--bg-strong, #ccc);
     border-radius: 8px;
     background: var(--bg-surface, #fff);
     color: inherit;
@@ -36,7 +36,7 @@ label {
 input[type="text"],
 input[type="url"] {
     padding: 0.25rem 0.5rem;
-    border: 1px solid var(--bg-border, #ccc);
+    border: 1px solid var(--bg-strong, #ccc);
     border-radius: var(--control-border-radius, 4px);
     background: transparent;
     color: inherit;
@@ -44,7 +44,7 @@ input[type="url"] {
 }
 
 input:focus {
-    outline: 2px solid var(--focus-color, highlight);
+    outline: 2px solid var(--fg-accent, highlight);
     outline-offset: -1px;
 }
 
@@ -63,7 +63,7 @@ input:focus {
 
 button {
     padding: 0.3rem 0.75rem;
-    border: 1px solid var(--bg-border, #ccc);
+    border: 1px solid var(--bg-strong, #ccc);
     border-radius: var(--control-border-radius, 4px);
     background: transparent;
     color: inherit;

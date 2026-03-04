@@ -28,7 +28,7 @@ const css = /*css*/`
 }
 
 .sortable-item:focus-visible {
-    outline: 2px solid var(--focus-color, highlight);
+    outline: 2px solid var(--fg-accent, highlight);
     outline-offset: -1px;
 }
 
@@ -37,11 +37,11 @@ const css = /*css*/`
 }
 
 .sortable-item.insert-before {
-    border-top-color: var(--focus-color, highlight);
+    border-top-color: var(--fg-accent, highlight);
 }
 
 .sortable-item.insert-after {
-    border-bottom-color: var(--focus-color, highlight);
+    border-bottom-color: var(--fg-accent, highlight);
 }
 
 .handle {

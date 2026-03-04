@@ -22,7 +22,7 @@
 
 /* main elements */
 header {
-    border-bottom: 1px solid currentColor;
+    border-bottom: 1px solid var(--bg-strong);
 }
 
 header h1 {
@@ -35,13 +35,21 @@ body {
     font-size: .875em;
 }
 
-:where(.container-header, link-item):hover {
-    background-color: var(--bg-muted);
+:where(.container-header, link-item) {
     border-radius: 5px;
+
+    &:hover {
+        background-color: var(--bg-muted);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--fg-accent);
+        outline-offset: -1px;
+    }
 }
 
 a {
-    color: currentColor;
+    color: var(--fg-accent);
 }
 
 /* toolbars */

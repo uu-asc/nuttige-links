@@ -20,14 +20,14 @@ const css = /*css*/`
 .trigger {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    border: 1px solid var(--bg-border, #ccc);
+    border: 1px solid var(--bg-strong, #ccc);
     border-radius: var(--control-border-radius, 4px);
     overflow: hidden;
     anchor-name: --combobox-trigger;
 }
 
 .trigger:focus-within {
-    outline: 2px solid var(--focus-color, highlight);
+    outline: 2px solid var(--fg-accent, highlight);
     outline-offset: -1px;
 }
 
@@ -72,7 +72,7 @@ input {
     cursor: pointer;
     background: var(--bg-muted, #f5f5f5);
     border: none;
-    border-left: 1px solid var(--bg-border, #ccc);
+    border-left: 1px solid var(--bg-strong, #ccc);
     color: inherit;
     font-size: .75em;
     user-select: none;
@@ -90,7 +90,7 @@ input {
     left: anchor(left);
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid var(--bg-border, #ccc);
+    border: 1px solid var(--bg-strong, #ccc);
     border-top: none;
     border-radius: 0 0 var(--control-border-radius, 4px) var(--control-border-radius, 4px);
     background: var(--bg-surface, #fff);
@@ -103,7 +103,7 @@ input {
 @position-try --flip-above {
     top: auto;
     bottom: anchor(top);
-    border-top: 1px solid var(--bg-border, #ccc);
+    border-top: 1px solid var(--bg-strong, #ccc);
     border-bottom: none;
     border-radius: var(--control-border-radius, 4px) var(--control-border-radius, 4px) 0 0;
 }
