@@ -16,6 +16,7 @@ import './components/link-dialog.js'
 import './components/bulk-link-dialog.js'
 import './components/container-dialog.js'
 import './components/reorder-sections-dialog.js'
+import './components/help-dialog.js'
 
 function isTableDirty(state, table) {
     return Object.keys(state[table].drafts).length > 0
@@ -40,6 +41,7 @@ async function init() {
     const editBtn = document.querySelector('[data-action="toggle-edit"]')
     const saveBtn = document.querySelector('[data-action="save-all"]')
     const revertBtn = document.querySelector('[data-action="revert-all"]')
+    const helpBtn = document.querySelector('[data-action="help"]')
     const linkTree = document.querySelector('link-tree')
 
     store.subscribe(
@@ -77,6 +79,10 @@ async function init() {
                 store.setState([table, 'errors'], {})
             })
         }
+    })
+
+    helpBtn.addEventListener('click', () => {
+        store.setState(['ui', 'dialog'], { mode: 'help' })
     })
 
     console.log('Loaded:', {

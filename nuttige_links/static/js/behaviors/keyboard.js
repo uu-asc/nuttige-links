@@ -111,6 +111,11 @@ const guardedGlobal = {
         document.querySelector('darkmode-toggle')?.toggle()
         return true
     },
+    '?': (e) => {
+        e.preventDefault()
+        store.setState(['ui', 'dialog'], { mode: 'help' })
+        return true
+    },
 }
 
 // --- global keys (unguarded) ---

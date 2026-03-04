@@ -15,15 +15,15 @@ header {
     display: grid;
     align-items: center;
     gap: 1rem;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto auto auto;
     grid-template-areas:
-        "head tool edit dark";
+        "head tool edit help dark";
 
     @media (width < 1200px) {
-        grid-template-columns: 1fr auto auto;
+        grid-template-columns: 1fr auto auto auto;
         grid-template-areas:
-            "head edit dark"
-            "tool tool tool";
+            "head edit help dark"
+            "tool tool tool tool";
         row-gap: 0;
         padding-bottom: .5rem;
     }
@@ -48,6 +48,9 @@ header {
         margin-left: auto;
     }
 
+    [data-action="help"] {
+        grid-area: help;
+    }
 }
 
 link-toolbar {
@@ -89,6 +92,8 @@ link-tree {
     @media (width < 900px) {
         columns: 2;
     }
+
+    "tool tool tool tool";
 
     @media (width < 600px) {
         columns: 1;
