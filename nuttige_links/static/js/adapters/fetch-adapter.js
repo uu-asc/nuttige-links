@@ -1,4 +1,6 @@
 export const fetchAdapter = {
+    capabilities: { checkLinks: true },
+
     async load(table) {
         const response = await fetch(`api/${table}/load`, { method: 'POST' })
         if (!response.ok) return []
@@ -11,6 +13,16 @@ export const fetchAdapter = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ upserts, deletes }),
+        })
+        if (!response.ok) return null
+        return response.json()
+    },
+
+    async checkLinks(ids) {
+        const response = await fetch('api/links/check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(ids ? { ids } : {}),
         })
         if (!response.ok) return null
         return response.json()

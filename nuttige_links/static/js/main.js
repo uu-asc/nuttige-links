@@ -2,12 +2,13 @@ import { store } from './datastore.js'
 import { sync } from './sync.js'
 import { fetchAdapter } from './adapters/fetch-adapter.js'
 import { computeVisibility } from './behaviors/filter.js'
-import { initSelection, selectAllVisible, deselectAll } from './behaviors/selection.js'
+import { initSelection } from './behaviors/selection.js'
 import { initKeyboard } from './behaviors/keyboard.js'
 import './vendor/darkmode-toggle.js'
 import './components/combobox.js'
 import './components/sortable-list.js'
 import './components/link-tree.js'
+import './components/link-content.js'
 import './components/toolbar.js'
 import './components/bulk-actions-bar.js'
 import './components/filter-input.js'
@@ -32,6 +33,8 @@ function isDirty(state) {
 async function init() {
     sync.setAdapter(fetchAdapter)
 
+    store.setState(['ui', 'canCheckLinks'], sync.capabilities.checkLinks ?? false)
+
     await sync.load('sections')
     await sync.load('subsections')
     await sync.load('links')
@@ -51,6 +54,7 @@ async function init() {
             editBtn.textContent = on ? '✎ Done' : '✎ Edit'
         }
     )
+
     store.subscribe(isDirty, (dirty) => {
         saveBtn.disabled = !dirty
         revertBtn.disabled = !dirty

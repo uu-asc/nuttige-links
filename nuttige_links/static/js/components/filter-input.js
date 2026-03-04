@@ -26,6 +26,7 @@ input[type="text"] {
     padding-block: .125rem;
     padding-inline: .5rem;
     border: none;
+    border-radius: 4px;
     background-color: transparent;
     font-size: .875em;
     outline: none;

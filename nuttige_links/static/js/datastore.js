@@ -34,6 +34,9 @@ class DataStore {
                 filterTerm: '',
                 showBrokenOnly: false,
                 linksOnly: false,
+                canCheckLinks: false,
+                showLinkStatus: false,
+                checkingLinks: false,
             },
         }
         this.listeners = new Set()

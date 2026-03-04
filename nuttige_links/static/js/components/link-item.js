@@ -64,6 +64,13 @@ class LinkItem extends HTMLElement {
                     if (cb) cb.checked = checked
                 }
             ),
+            store.subscribe(
+                s => s.ui.showLinkStatus,
+                (on) => {
+                    const el = this.querySelector('link-content')
+                    if (el) el.toggleAttribute('show-status', on)
+                }
+            ),
         ]
 
         this.syncDirtyState()
@@ -93,30 +100,13 @@ class LinkItem extends HTMLElement {
         spacer.className = 'chevron-spacer'
         this.appendChild(spacer)
 
-        // const dot = document.createElement('span')
-        // dot.className = 'status-dot'
-        // if (this.record.last_status === null || this.record.last_status === undefined) {
-        //     dot.dataset.status = 'unchecked'
-        // } else if (this.record.last_status >= 200 && this.record.last_status < 400) {
-        //     dot.dataset.status = 'ok'
-        // } else {
-        //     dot.dataset.status = 'broken'
-        // }
-        // this.appendChild(dot)
-
-        const a = document.createElement('a')
-        a.href = this.record.url
-        a.target = '_blank'
-        a.rel = 'noopener'
-        a.textContent = this.record.text
-        this.appendChild(a)
-
-        if (this.record.description) {
-            const desc = document.createElement('span')
-            desc.className = 'link-description'
-            desc.textContent = this.record.description
-            this.appendChild(desc)
-        }
+        const content = document.createElement('link-content')
+        content.url = this.record.url
+        content.text = this.record.text
+        content.description = this.record.description
+        content.status = this.record.last_status
+        if (store.state.ui.showLinkStatus) content.setAttribute('show-status', '')
+        this.appendChild(content)
 
         const actions = document.createElement('tree-actions')
         this.appendChild(actions)

@@ -7,6 +7,10 @@ class SyncManager {
         this._adapter = adapter
     }
 
+    get capabilities() {
+        return this._adapter?.capabilities ?? {}
+    }
+
     async _persist(table, upserts, deletes) {
         return this._adapter.save(table, upserts, deletes)
     }
@@ -136,6 +140,23 @@ class SyncManager {
         const records = await this._adapter.load(table)
         const map = Object.fromEntries(records.map(r => [r.id, r]))
         store.setState([table, 'records'], map)
+    }
+
+    async checkLinks(ids) {
+        if (!this._adapter?.capabilities?.checkLinks) return
+        store.setState(['ui', 'checkingLinks'], true)
+        try {
+            const result = await this._adapter.checkLinks(ids)
+            if (result?.records) {
+                store.batch(() => {
+                    for (const record of result.records) {
+                        store.setState(['links', 'records', record.id], record)
+                    }
+                })
+            }
+        } finally {
+            store.setState(['ui', 'checkingLinks'], false)
+        }
     }
 }
 

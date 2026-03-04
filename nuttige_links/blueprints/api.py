@@ -34,7 +34,8 @@ class GenericAPI(MethodView):
         db = get_db()
 
         for record in data.get("upserts", []):
-            record = {k: v for k, v in record.items() if k not in self.MANAGED_FIELDS}
+            record = {k: v for k, v in record.items(
+            ) if k not in self.MANAGED_FIELDS}
             columns, values = zip(*record.items())
             placeholders = ", ".join("?" for _ in columns)
             columns_str = ", ".join(columns)
@@ -62,7 +63,8 @@ class GenericAPI(MethodView):
         if saved_ids:
             placeholders = ",".join("?" * len(saved_ids))
             rows = db.execute(
-                f"SELECT * FROM {self.table} WHERE id IN ({placeholders})", saved_ids
+                f"SELECT * FROM {
+                    self.table} WHERE id IN ({placeholders})", saved_ids
             ).fetchall()
             return {"status": "ok", "records": [dict(row) for row in rows]}
 
@@ -87,6 +89,10 @@ CHECK_MAX_CONCURRENT = 20
 async def check_single(client, link_id, url):
     try:
         response = await client.head(url, follow_redirects=True, timeout=CHECK_TIMEOUT)
+        if response.status_code >= 400:
+            response = await client.get(
+                url, follow_redirects=True, timeout=CHECK_TIMEOUT
+            )
         return link_id, response.status_code
     except httpx.TimeoutException:
         return link_id, 408

@@ -1,4 +1,5 @@
 import { store } from '../datastore.js'
+import { sync } from '../sync.js'
 import { bulkMarkForDelete } from '../behaviors/actions.js'
 import { deselectAll, selectAllVisible } from '../behaviors/selection.js'
 
@@ -8,6 +9,7 @@ class BulkActionsBar extends HTMLElement {
             <hr>
             <span data-ref="count"></span>
             <button data-action="edit">Edit</button>
+            <button data-action="check" hidden>Check</button>
             <span data-ref="hint" hidden></span>
             <button data-action="delete">Delete</button>
             <button data-action="deselect">Deselect all</button>
@@ -15,6 +17,7 @@ class BulkActionsBar extends HTMLElement {
 
         this._countEl = this.querySelector('[data-ref="count"]')
         this._editBtn = this.querySelector('[data-action="edit"]')
+        this._checkBtn = this.querySelector('[data-action="check"]')
         this._hintEl = this.querySelector('[data-ref="hint"]')
         this._deleteBtn = this.querySelector('[data-action="delete"]')
         this._deselectBtn = this.querySelector('[data-action="deselect"]')
@@ -45,6 +48,24 @@ class BulkActionsBar extends HTMLElement {
                 store.setState(['links', 'checkedIds'], new Set())
             })
         })
+
+        this._checkBtn.addEventListener('click', () => {
+            const ids = [...store.state.links.checkedIds]
+            if (ids.length) sync.checkLinks(ids)
+        })
+
+        store.subscribe(
+            s => s.ui.checkingLinks,
+            (busy) => {
+                this._checkBtn.disabled = busy
+                this._checkBtn.textContent = busy ? 'Checking…' : 'Check'
+            }
+        )
+
+        store.subscribe(
+            s => s.ui.canCheckLinks,
+            (can) => { this._checkBtn.hidden = !can }
+        )
 
         store.subscribe(
             s => `${[...s.sections.checkedIds]}|${[...s.subsections.checkedIds]}|${[...s.links.checkedIds]}`,
@@ -79,6 +100,7 @@ class BulkActionsBar extends HTMLElement {
 
         this._countEl.textContent = `${total} selected`
         this._editBtn.disabled = editDisabled
+        this._checkBtn.disabled = editDisabled
         this._hintEl.hidden = !mixed
         this._hintEl.textContent = mixed ? 'Select only links to edit' : ''
     }
