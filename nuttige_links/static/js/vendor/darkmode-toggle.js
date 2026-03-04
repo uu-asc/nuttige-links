@@ -1,24 +1,24 @@
-const style =
-    `button {
-    color: inherit;
-    cursor: pointer;
-    font-size: 1.5em;
-    background: transparent;
-    border: none;
-    border-radius: 4px;
-    height: 1.5em;
-    transition: transform 200ms ease-in-out;
+const style = `
+    button {
+        color: inherit;
+        cursor: pointer;
+        font-size: 1.5em;
+        background: transparent;
+        border: none;
+        border-radius: 4px;
+        height: 1.5em;
+        transition: transform 200ms ease-in-out;
 
-    &:hover {
-        transform: scale(1.25);
+        &:hover {
+            transform: scale(1.25);
+        }
+        &:focus-within {
+            outline: 2px solid var(--fg-accent);
+        }
     }
-    &:focus-within {
-        outline: 2px solid var(--fg-accent);
+    .hidden {
+        display: none;
     }
-}
-.hidden {
-    display: none;
-}
 `
 
 export class DarkModeToggle extends HTMLElement {
