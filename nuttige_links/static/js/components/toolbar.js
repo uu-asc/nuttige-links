@@ -37,6 +37,8 @@ class LinkToolbar extends HTMLElement {
         this.viewActions = this.querySelector('.view-actions')
         this.editActions = this.querySelector('.edit-actions')
         this.bulkBar = this.querySelector('bulk-actions-bar')
+        this.importBtn = this.querySelector('[data-action="import"]')
+        this.exportBtn = this.querySelector('[data-action="export"]')
 
         store.subscribe(
             s => s.sections.checkedIds.size + s.subsections.checkedIds.size + s.links.checkedIds.size,
@@ -112,6 +114,17 @@ class LinkToolbar extends HTMLElement {
             const next = !store.state.ui.showLinkStatus
             store.setState(['ui', 'showLinkStatus'], next)
             this.statusBtn.classList.toggle('active', next)
+        })
+
+        this.exportBtn.addEventListener('click', () => {
+            const data = sync.exportAll()
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'nuttige-links-export.json'
+            a.click()
+            URL.revokeObjectURL(url)
         })
 
         store.subscribe(
