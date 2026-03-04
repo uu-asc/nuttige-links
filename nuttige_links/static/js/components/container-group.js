@@ -163,7 +163,7 @@ export class ContainerGroup extends HTMLElement {
     }
 
     setupListeners() {
-        this.header.addEventListener('click', (e) => {
+        this.header.addEventListener('pointerup', (e) => {
             if (e.target.closest('tree-actions') || e.target.matches('.checkbox') || e.target.closest('.add-item')) return
             this.handleToggle(e)
         })

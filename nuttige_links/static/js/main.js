@@ -3,6 +3,7 @@ import { sync } from './sync.js'
 import { fetchAdapter } from './adapters/fetch-adapter.js'
 import { computeVisibility } from './behaviors/filter.js'
 import { initSelection, selectAllVisible, deselectAll } from './behaviors/selection.js'
+import { initKeyboard } from './behaviors/keyboard.js'
 import './vendor/darkmode-toggle.js'
 import './components/combobox.js'
 import './components/sortable-list.js'
@@ -86,3 +87,4 @@ async function init() {
 }
 
 init()
+initKeyboard()

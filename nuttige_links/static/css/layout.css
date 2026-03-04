@@ -55,6 +55,7 @@ link-toolbar {
     flex-wrap: wrap;
     align-items: center;
     gap: .5rem;
+    padding-inline: .25rem;
     height: 2rem;
 
     .edit-actions {

@@ -75,3 +75,14 @@ export function deselectAll() {
         }
     })
 }
+
+export function setSelectionAnchor(id, table, checked) {
+    lastAction = { id, table, checked }
+}
+
+export function extendSelectionTo(id, table, root) {
+    if (!lastAction) return
+    const range = resolveRange(root, lastAction.id, id)
+    if (range.length) applyChecked(range, lastAction.checked)
+    lastAction = { id, table, checked: lastAction.checked }
+}

@@ -15,7 +15,6 @@ bulk-actions-bar {
 /* edit mode */
 body[data-edit-mode] .checkbox {
     display: revert;
-    visibility: hidden;
 }
 
 body[data-edit-mode] tree-actions {
@@ -39,23 +38,6 @@ tree-actions {
 }
 
 details[open] tree-actions {
-    visibility: visible;
-}
-
-/* checkbox visibility */
-link-item .checkbox,
-section-group .checkbox,
-subsection-group .checkbox {
-    visibility: hidden;
-}
-
-body[data-edit-mode] link-item:hover .checkbox,
-body[data-edit-mode] section-group>details>summary:hover .checkbox,
-body[data-edit-mode] subsection-group>details>summary:hover .checkbox {
-    visibility: visible;
-}
-
-body[data-edit-mode] link-tree[data-any-checked] .checkbox {
     visibility: visible;
 }
 

@@ -84,9 +84,14 @@ details[open]>.container-header .chevron {
     transform: rotate(90deg);
 }
 
+link-item {
+    border-radius: 5px;
+}
+
 /* container-groups */
 .container-header {
     font-weight: bold;
+    border-radius: 5px;
 }
 
 section-group>details>.container-header {

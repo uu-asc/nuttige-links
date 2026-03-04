@@ -4,9 +4,9 @@ import { computeVisibility } from '../behaviors/filter.js'
 class LinkToolbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
-            <filter-input></filter-input>
-            <button data-action="expand-all">Expand all</button>
-            <button data-action="collapse-all">Collapse all</button>
+            <filter-input data-nav-header></filter-input>
+            <button data-action="expand-all" data-nav-header>Expand all</button>
+            <button data-action="collapse-all" data-nav-header>Collapse all</button>
             <div class="edit-actions">
                 <hr>
                 <button data-action="reorder-sections">⇅ Sections</button>
@@ -30,6 +30,20 @@ class LinkToolbar extends HTMLElement {
             (count) => {
                 editActions.hidden = count > 0
                 bulkBar.hidden = count === 0
+                for (const btn of editActions.querySelectorAll('button')) {
+                    btn.toggleAttribute('data-nav-header', count === 0)
+                }
+                for (const btn of bulkBar.querySelectorAll('button')) {
+                    btn.toggleAttribute('data-nav-header', count > 0)
+                }
+            }
+        )
+        store.subscribe(
+            s => s.ui.editMode,
+            (on) => {
+                for (const btn of editActions.querySelectorAll('button')) {
+                    btn.toggleAttribute('data-nav-header', on)
+                }
             }
         )
 

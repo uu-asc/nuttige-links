@@ -14,6 +14,7 @@ const css = /*css*/`
     display: grid;
     grid-template-columns: 1fr auto auto;
     gap: .125rem;
+    align-items: center;
     padding-inline: .125rem;
     padding-block: .125rem;
     border: 1px solid currentColor;
@@ -35,12 +36,13 @@ input[type="text"] {
 button {
     display: grid;
     place-items: center;
+    padding-block: .25rem;
     font-family: monospace;
     font-size: .65em;
     user-select: none;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 2px;
     background-color: transparent;
     padding-inline: .5rem;
     color: inherit;
@@ -224,6 +226,10 @@ class FilterInput extends HTMLElement {
         this.dispatchFilterChange()
     }
 
+    focus() {
+        this.searchbox.focus()
+    }
+
     isNavKey(e) {
         if (e.altKey && ["ArrowLeft", "ArrowRight"].includes(e.key)) return true
         if (["ArrowLeft", "ArrowRight"].includes(e.key) && this.shouldAllowNavigation(e)) return true
@@ -243,7 +249,14 @@ class FilterInput extends HTMLElement {
         const items = this.focusableItems
         const idx = items.indexOf(this.shadowRoot.activeElement)
         const next = items[idx + direction]
-        if (next) next.focus()
+        if (next) {
+            next.focus()
+        } else {
+            this.dispatchEvent(new CustomEvent('nav-overflow', {
+                detail: { direction },
+                bubbles: true, composed: true,
+            }))
+        }
     }
 }
 

@@ -106,6 +106,14 @@ export class DarkModeToggle extends HTMLElement {
             this._moon.classList.add("hidden")
         }
     }
+
+    toggle() {
+        this.handleClick()
+    }
+
+    focus() {
+        this._button.focus()
+    }
 }
 
 customElements.define("darkmode-toggle", DarkModeToggle)
