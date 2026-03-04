@@ -88,12 +88,11 @@ export async function init(adapter) {
         store.setState(['ui', 'dialog'], { mode: 'help' })
     })
 
+    initKeyboard()
+
     console.log('Loaded:', {
         sections: Object.keys(store.state.sections.records).length,
         subsections: Object.keys(store.state.subsections.records).length,
         links: Object.keys(store.state.links.records).length,
     })
 }
-
-init()
-initKeyboard()
