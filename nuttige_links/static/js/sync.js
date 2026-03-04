@@ -158,6 +158,24 @@ class SyncManager {
             store.setState(['ui', 'checkingLinks'], false)
         }
     }
+
+    exportAll() {
+        const data = {}
+        for (const table of ['sections', 'subsections', 'links']) {
+            data[table] = Object.values(store.state[table].records)
+        }
+        return data
+    }
+
+    async importAll(data) {
+        for (const table of ['sections', 'subsections', 'links']) {
+            if (!data[table]?.length) continue
+            await this._adapter.save(table, data[table], [])
+        }
+        for (const table of ['sections', 'subsections', 'links']) {
+            await this.load(table)
+        }
+    }
 }
 
 export const sync = new SyncManager()
