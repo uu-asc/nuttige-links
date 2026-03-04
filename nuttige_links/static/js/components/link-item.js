@@ -105,6 +105,7 @@ class LinkItem extends HTMLElement {
         content.text = this.record.text
         content.description = this.record.description
         content.status = this.record.last_status
+        content.updatedAt = this.record.updated_at
         if (store.state.ui.showLinkStatus) content.setAttribute('show-status', '')
         this.appendChild(content)
 

@@ -66,6 +66,11 @@ class LinkContent extends HTMLElement {
                 .link-popover .desc {
                     margin-top: .25rem;
                 }
+                .link-popover .updated {
+                    margin-top: .25rem;
+                    opacity: 0.5;
+                    font-size: .6125rem;
+                }
             </style>
             <span class="anchor">
                 <span class="status-icon"></span>
@@ -74,6 +79,7 @@ class LinkContent extends HTMLElement {
             <span class="link-popover" popover="manual">
                 <span class="url"></span>
                 <span class="desc" hidden></span>
+                <span class="updated" hidden></span>
             </span>
         `
         this._icon = this.shadowRoot.querySelector('.status-icon')
@@ -81,6 +87,7 @@ class LinkContent extends HTMLElement {
         this._popover = this.shadowRoot.querySelector('.link-popover')
         this._popoverUrl = this._popover.querySelector('.url')
         this._popoverDesc = this._popover.querySelector('.desc')
+        this._popoverUpdated = this._popover.querySelector('.updated')
 
         this.addEventListener('mouseenter', () => this._showPopover())
         this.addEventListener('mouseleave', () => this._hidePopover())
@@ -110,6 +117,15 @@ class LinkContent extends HTMLElement {
     set description(v) {
         this._popoverDesc.textContent = v ?? ''
         this._popoverDesc.hidden = !v
+    }
+
+    set updatedAt(v) {
+        if (!v) {
+            this._popoverUpdated.hidden = true
+            return
+        }
+        this._popoverUpdated.textContent = `Updated: ${new Date(v).toLocaleDateString()}`
+        this._popoverUpdated.hidden = false
     }
 
     set status(v) {
