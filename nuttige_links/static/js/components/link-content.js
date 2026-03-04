@@ -7,11 +7,15 @@ class LinkContent extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 :host {
+                    display: contents;
+                }
+                .anchor {
                     display: flex;
                     align-items: center;
                     gap: .25rem;
                     overflow: hidden;
                     min-width: 0;
+                    anchor-name: --link;
                 }
                 .status-icon {
                     flex-shrink: 0;
@@ -33,67 +37,79 @@ class LinkContent extends HTMLElement {
                     text-overflow: ellipsis;
                     white-space: nowrap;
                 }
-                .desc-trigger {
-                    flex-shrink: 0;
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    font-size: .75rem;
-                    opacity: 0.5;
-                    padding: 0 .125rem;
-                    color: inherit;
-                    anchor-name: --desc;
-                }
-                .desc-trigger:hover { opacity: 1; }
                 .link-popover {
                     position: fixed;
-                    position-anchor: --desc;
-                    position-area: bottom span-right;
-                    margin: 0;
-                    width: max-content;
-                    max-width: 20rem;
-                    padding: .5rem .75rem;
+                    position-anchor: --link;
+                    position-area: bottom; 
+                    margin-block: .5rem 0;
+                    position-try-fallbacks: --top;
+
+                    width: anchor-size(width);
                     border: 1px solid var(--bg-strong);
-                    border-radius: 5px;
+                    border-radius: 4px;
+                    padding: .5rem .75rem;
                     background: var(--bg);
                     color: var(--fg);
                     font-size: .8rem;
                 }
+                .link-popover:popover-open {
+                    display: grid;
+                }
+                @position-try --top {
+                    position-area: top;
+                    margin-block: 0 .25rem;
+                }
+                .link-popover .url {
+                    opacity: 0.7;
+                    word-break: break-all;
+                }
+                .link-popover .desc {
+                    margin-top: .25rem;
+                }
             </style>
-            <span class="status-icon"></span>
-            <a target="_blank" rel="noopener"></a>
+            <span class="anchor">
+                <span class="status-icon"></span>
+                <a target="_blank" rel="noopener"></a>
+            </span>
+            <span class="link-popover" popover="manual">
+                <span class="url"></span>
+                <span class="desc" hidden></span>
+            </span>
         `
         this._icon = this.shadowRoot.querySelector('.status-icon')
         this._anchor = this.shadowRoot.querySelector('a')
-        this._trigger = null
-        this._popover = null
+        this._popover = this.shadowRoot.querySelector('.link-popover')
+        this._popoverUrl = this._popover.querySelector('.url')
+        this._popoverDesc = this._popover.querySelector('.desc')
+
+        this.addEventListener('mouseenter', () => this._showPopover())
+        this.addEventListener('mouseleave', () => this._hidePopover())
+        this._onParentFocusin = () => this._showPopover()
+        this._onParentFocusout = () => this._hidePopover()
     }
 
-    set url(v) { this._anchor.href = v ?? '' }
+    connectedCallback() {
+        this._parentItem = this.closest('link-item')
+        this._parentItem?.addEventListener('focusin', this._onParentFocusin)
+        this._parentItem?.addEventListener('focusout', this._onParentFocusout)
+    }
+
+    disconnectedCallback() {
+        this._parentItem?.removeEventListener('focusin', this._onParentFocusin)
+        this._parentItem?.removeEventListener('focusout', this._onParentFocusout)
+        this._parentItem = null
+    }
+
+    set url(v) {
+        this._anchor.href = v ?? ''
+        this._popoverUrl.textContent = v ?? ''
+    }
+
     set text(v) { this._anchor.textContent = v ?? '' }
 
     set description(v) {
-        if (v) {
-            if (!this._trigger) {
-                this._trigger = document.createElement('button')
-                this._trigger.className = 'desc-trigger'
-                this._trigger.textContent = 'ⓘ'
-
-                this._popover = document.createElement('span')
-                this._popover.popover = 'auto'
-                this._popover.className = 'link-popover'
-                this._trigger.popoverTargetElement = this._popover
-
-                this.shadowRoot.appendChild(this._trigger)
-                this.shadowRoot.appendChild(this._popover)
-            }
-            this._popover.textContent = v
-        } else if (this._trigger) {
-            this._trigger.remove()
-            this._popover.remove()
-            this._trigger = null
-            this._popover = null
-        }
+        this._popoverDesc.textContent = v ?? ''
+        this._popoverDesc.hidden = !v
     }
 
     set status(v) {
@@ -106,6 +122,15 @@ class LinkContent extends HTMLElement {
         } else {
             this._icon.dataset.status = 'broken'
         }
+    }
+
+    _showPopover() {
+        if (!this._anchor.href) return
+        this._popover.showPopover()
+    }
+
+    _hidePopover() {
+        this._popover.hidePopover()
     }
 }
 
