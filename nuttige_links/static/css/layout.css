@@ -57,9 +57,16 @@ link-toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: .5rem;
+    column-gap: .5rem;
+    margin-block: .125rem;
     padding-inline: .25rem;
-    height: 2rem;
+    min-height: 2rem;
+
+    div {
+        display: flex;
+        align-items: center;
+        column-gap: .5rem;
+    }
 
     .edit-actions {
         gap: .5rem;
@@ -92,8 +99,6 @@ link-tree {
     @media (width < 900px) {
         columns: 2;
     }
-
-    "tool tool tool tool";
 
     @media (width < 600px) {
         columns: 1;

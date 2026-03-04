@@ -76,6 +76,11 @@ link-item {
     text-wrap: balance;
 }
 
+span:has(.checkbox:focus-visible) {
+    outline: 2px solid var(--fg-accent);
+    border-radius: 4px;
+}
+
 body[data-edit-mode] :where(.container-header .name, link-item a) {
     overflow: hidden;
     text-overflow: ellipsis;

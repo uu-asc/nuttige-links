@@ -3,10 +3,13 @@
 }
 
 /* hidden outside edit mode */
+.view-actions {
+    display: flex;
+}
+
 .checkbox,
 .add-item,
 tree-actions,
-hr,
 .edit-actions,
 bulk-actions-bar {
     display: none;
@@ -20,6 +23,10 @@ body[data-edit-mode] .checkbox {
 body[data-edit-mode] tree-actions {
     display: grid;
     visibility: hidden;
+}
+
+body[data-edit-mode] .view-actions {
+    display: none;
 }
 
 body[data-edit-mode] .edit-actions,
