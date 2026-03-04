@@ -1,6 +1,5 @@
 import { store } from './datastore.js'
 import { sync } from './sync.js'
-import { fetchAdapter } from './adapters/fetch-adapter.js'
 import { computeVisibility } from './behaviors/filter.js'
 import { initSelection } from './behaviors/selection.js'
 import { initKeyboard } from './behaviors/keyboard.js'
@@ -30,8 +29,8 @@ function isDirty(state) {
         || isTableDirty(state, 'links')
 }
 
-async function init() {
-    sync.setAdapter(fetchAdapter)
+export async function init(adapter) {
+    sync.setAdapter(adapter)
 
     store.setState(['ui', 'canCheckLinks'], sync.capabilities.checkLinks ?? false)
 

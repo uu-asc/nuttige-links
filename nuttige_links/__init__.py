@@ -20,4 +20,8 @@ def create_app():
     def index():
         return app.send_static_file("index.html")
 
+    @app.route("/local")
+    def personal():
+        return app.send_static_file("local.html")
+
     return app
