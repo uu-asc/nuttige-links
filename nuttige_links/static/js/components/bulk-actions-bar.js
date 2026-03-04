@@ -6,12 +6,12 @@ import { deselectAll, selectAllVisible } from '../behaviors/selection.js'
 class BulkActionsBar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
-            <hr>
             <span data-ref="count"></span>
             <button data-action="edit">Edit</button>
             <button data-action="check" hidden>Check</button>
             <span data-ref="hint" hidden></span>
             <button data-action="delete">Delete</button>
+            <hr>
             <button data-action="deselect">Deselect all</button>
         `
 

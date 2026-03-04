@@ -6,19 +6,26 @@ class LinkToolbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <filter-input data-nav-header></filter-input>
-            <button data-action="expand-all" data-nav-header>Expand all</button>
-            <button data-action="collapse-all" data-nav-header>Collapse all</button>
-            <button data-action="toggle-status" data-nav-header hidden>Show status</button>
-            <div class="edit-actions">
-                <hr>
-                <button data-action="reorder-sections">⇅ Sections</button>
-                <button data-action="add-link">+ Add link</button>
-                <button data-action="check-links" hidden>Check links</button>
-                <hr>
-                <button data-action="save-all" disabled>Save</button>
-                <button data-action="revert-all" disabled>Revert</button>
+            <div>
+                <div class="view-actions">
+                    <button data-action="expand-all" data-nav-header>Expand all</button>
+                    <button data-action="collapse-all" data-nav-header>Collapse all</button>
+                    <hr>
+                    <button data-action="toggle-status" data-nav-header hidden>Show status</button>
+                </div>
+                <div class="edit-actions">
+                    <button data-action="reorder-sections">⇅ Sections</button>
+                    <button data-action="add-link">+ Add link</button>
+                    <button data-action="check-links" hidden>Check links</button>
+                    <hr>
+                    <button data-action="save-all" disabled>Save</button>
+                    <button data-action="revert-all" disabled>Revert</button>
+                    <hr>
+                    <button data-action="import">Import</button>
+                    <button data-action="export">Export</button>
+                </div>
+                <bulk-actions-bar hidden></bulk-actions-bar>
             </div>
-            <bulk-actions-bar hidden></bulk-actions-bar>
         `
 
         this.filterInput = this.querySelector('filter-input')
@@ -27,19 +34,19 @@ class LinkToolbar extends HTMLElement {
         this.checkBtn = this.querySelector('[data-action="check-links"]')
         this.onstatusBtn = this.querySelector('[data-action="toggle-status"]')
         this.statusBtn = this.querySelector('[data-action="toggle-status')
-
-        const editActions = this.querySelector('.edit-actions')
-        const bulkBar = this.querySelector('bulk-actions-bar')
+        this.viewActions = this.querySelector('.view-actions')
+        this.editActions = this.querySelector('.edit-actions')
+        this.bulkBar = this.querySelector('bulk-actions-bar')
 
         store.subscribe(
             s => s.sections.checkedIds.size + s.subsections.checkedIds.size + s.links.checkedIds.size,
             (count) => {
-                editActions.hidden = count > 0
-                bulkBar.hidden = count === 0
-                for (const btn of editActions.querySelectorAll('button')) {
+                this.editActions.hidden = count > 0
+                this.bulkBar.hidden = count === 0
+                for (const btn of this.editActions.querySelectorAll('button')) {
                     btn.toggleAttribute('data-nav-header', count === 0)
                 }
-                for (const btn of bulkBar.querySelectorAll('button')) {
+                for (const btn of this.bulkBar.querySelectorAll('button')) {
                     btn.toggleAttribute('data-nav-header', count > 0)
                 }
             }
@@ -47,8 +54,11 @@ class LinkToolbar extends HTMLElement {
         store.subscribe(
             s => s.ui.editMode,
             (on) => {
-                for (const btn of editActions.querySelectorAll('button')) {
+                for (const btn of this.editActions.querySelectorAll('button')) {
                     btn.toggleAttribute('data-nav-header', on)
+                }
+                for (const btn of this.viewActions.querySelectorAll('button')) {
+                    btn.toggleAttribute('data-nav-header', !on)
                 }
             }
         )
