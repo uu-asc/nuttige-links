@@ -120,6 +120,10 @@ section-group>details>.container-header {
         background: var(--bg-emphasis);
     }
 
+    &:focus-visible {
+        outline: 2px solid var(--fg-accent);
+    }
+
     &:disabled {
         opacity: 0.45;
         cursor: default;

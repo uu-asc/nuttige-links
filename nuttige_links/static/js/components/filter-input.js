@@ -31,6 +31,10 @@ input[type="text"] {
     outline: none;
     min-width: 0;
     color: inherit;
+
+    &:focus-within {
+        outline: 2px solid var(--fg-accent);
+    }
 }
 
 button {
@@ -46,14 +50,16 @@ button {
     background-color: transparent;
     padding-inline: .5rem;
     color: inherit;
-}
 
-button:hover {
-    background-color: color-mix(in srgb, currentColor 15%, transparent);
-}
-
-button.active {
-    background-color: color-mix(in srgb, currentColor 20%, transparent);
+    &:hover {
+        background-color: color-mix(in srgb, currentColor 15%, transparent);
+    }
+    &:focus-within {
+        outline: 2px solid var(--fg-accent);
+    }
+    &.active {
+        background-color: color-mix(in srgb, currentColor 20%, transparent);
+    }
 }
 
 button[data-command="clear"] {
