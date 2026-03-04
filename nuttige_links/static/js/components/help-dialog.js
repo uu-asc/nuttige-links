@@ -23,12 +23,12 @@ class HelpDialog extends BaseDialog {
                 <section>
                     <h3>Navigation</h3>
                     <dl>
-                        <dt>↑ / ↓</dt>      <dd>Move between items</dd>
-                        <dt>← / →</dt>      <dd>Move between header controls</dd>
-                        <dt>↓ from header</dt><dd>Enter tree</dd>
-                        <dt>↑ from top</dt>  <dd>Return to header</dd>
-                        <dt>Page Up / Down</dt><dd>Jump to previous / next section</dd>
-                        <dt>Home / End</dt>  <dd>Jump to first / last item</dd>
+                        <dt>↑ / ↓</dt>          <dd>Move between items</dd>
+                        <dt>← / →</dt>          <dd>Move between header controls</dd>
+                        <dt>↓ from header</dt>  <dd>Enter tree</dd>
+                        <dt>↑ from top</dt>     <dd>Return to header</dd>
+                        <dt>Page Up / Down</dt> <dd>Jump to previous / next section</dd>
+                        <dt>Home / End</dt>     <dd>Jump to first / last item</dd>
                     </dl>
                 </section>
 
@@ -45,7 +45,7 @@ class HelpDialog extends BaseDialog {
                     <dl>
                         <dt>Space</dt>       <dd>Toggle checkbox</dd>
                         <dt>Shift+Space</dt> <dd>Extend selection to item</dd>
-                        <dt>← / →</dt>      <dd>Navigate inline controls</dd>
+                        <dt>← / →</dt>       <dd>Navigate inline controls</dd>
                         <dt>Enter</dt>       <dd>Edit item</dd>
                         <dt>+</dt>           <dd>Add link at current position</dd>
                         <dt>Delete</dt>      <dd>Mark item for deletion</dd>
@@ -55,9 +55,11 @@ class HelpDialog extends BaseDialog {
                 <section>
                     <h3>Dialogs</h3>
                     <dl>
-                        <dt>Alt+↑ / ↓</dt>  <dd>Move between fields</dd>
-                        <dt>Enter</dt>       <dd>Next field / save</dd>
-                        <dt>Esc</dt>         <dd>Close dialog</dd>
+                        <dt>↑ / ↓</dt>      <dd>Move between fields</dd>
+                        <dt>Alt+↑ / ↓</dt>  <dd>Move between fields (always)</dd>
+                        <dt>← / →</dt>      <dd>Move between action buttons</dd>
+                        <dt>Enter</dt>      <dd>Next field / save</dd>
+                        <dt>Esc</dt>        <dd>Close dialog</dd>
                     </dl>
                 </section>
 
@@ -74,8 +76,8 @@ class HelpDialog extends BaseDialog {
                     <dl>
                         <dt>Esc</dt>         <dd>Clear filter text</dd>
                         <dt>Ctrl+Delete</dt> <dd>Reset all filters</dd>
-                        <dt>← / →</dt>      <dd>Move between filter controls (when input empty)</dd>
-                        <dt>Alt+← / →</dt>  <dd>Move between filter controls (always)</dd>
+                        <dt>← / →</dt>       <dd>Move between filter controls (when input empty)</dd>
+                        <dt>Alt+← / →</dt>   <dd>Move between filter controls (always)</dd>
                     </dl>
                 </section>
             </div>
