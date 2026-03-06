@@ -20,6 +20,7 @@ const css = /*css*/`
     border: 1px solid var(--bg-strong);
     border-right: none;
     border-radius: 5px 0 0 5px;
+    background-color: var(--bg-surface);
 }
 
 input[type="text"] {
@@ -53,13 +54,13 @@ button {
     color: inherit;
 
     &:hover {
-        background-color: color-mix(in srgb, currentColor 15%, transparent);
+        background-color: var(--bg-muted);
     }
-    &:focus-within {
+    &:focus-visible {
         outline: 2px solid var(--fg-accent);
     }
-    &.active {
-        background-color: color-mix(in srgb, currentColor 20%, transparent);
+    &:active, &.active {
+        background-color: var(--bg-emphasis);
     }
 }
 
