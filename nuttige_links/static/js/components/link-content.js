@@ -1,3 +1,6 @@
+import { copyRichLink } from '../behaviors/clipboard.js'
+import { store } from '../datastore.js'
+
 class LinkContent extends HTMLElement {
     static observedAttributes = ['show-status']
 
@@ -32,6 +35,7 @@ class LinkContent extends HTMLElement {
                 .status-icon[data-status="broken"]::after   { content: '✗'; color: oklch(0.6 0.28 25); }
                 .status-icon[data-status="timeout"]::after  { content: '?'; color: oklch(0.72 0.2 85); }
                 a {
+                    cursor: inherit;
                     color: var(--fg-accent);
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -61,6 +65,7 @@ class LinkContent extends HTMLElement {
                 }
                 .link-popover .url {
                     opacity: 0.7;
+                    color: var(--fg-accent);
                     word-break: break-all;
                 }
                 .link-popover .desc {
@@ -91,6 +96,13 @@ class LinkContent extends HTMLElement {
 
         this.addEventListener('mouseenter', () => this._showPopover())
         this.addEventListener('mouseleave', () => this._hidePopover())
+        this._anchor.addEventListener('click', (e) => {
+            if (!(e.ctrlKey || e.metaKey)) return
+            e.preventDefault()
+            e.stopPropagation()
+            const record = this._getRecord()
+            if (record) copyRichLink(record)
+        })
         this._onParentFocusin = () => this._showPopover()
         this._onParentFocusout = () => this._hidePopover()
     }
@@ -147,6 +159,13 @@ class LinkContent extends HTMLElement {
 
     _hidePopover() {
         this._popover.hidePopover()
+    }
+
+    _getRecord() {
+        const item = this.closest('link-item')
+        if (!item) return null
+        const id = item.recordId
+        return store.state.links.drafts[id] ?? store.state.links.records[id]
     }
 }
 

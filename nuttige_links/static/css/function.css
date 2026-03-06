@@ -51,3 +51,26 @@ details[open] tree-actions {
 body[data-edit-mode] details[open] tree-actions {
     visibility: visible;
 }
+
+/* copy affordance */
+link-item {
+    cursor: pointer;
+}
+
+body[data-ctrl] link-item {
+    cursor: copy;
+}
+
+link-item[data-copied] {
+    animation: copy-flash 600ms ease-out;
+}
+
+@keyframes copy-flash {
+    0% {
+        background-color: var(--bg-emphasis);
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}

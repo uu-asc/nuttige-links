@@ -2,6 +2,7 @@ import { store } from '../datastore.js'
 import { getVisibleItems } from './visibility.js'
 import { markForDelete } from './actions.js'
 import { setSelectionAnchor, extendSelectionTo, selectAllVisible } from './selection.js'
+import { copyUrl, copyRichLink, getRecordForItem, initCtrlTracking } from './clipboard.js'
 
 const navState = {
     zone: 'none',
@@ -199,6 +200,13 @@ function handleTreeNormal(e) {
             e.preventDefault()
             const item = items[navState.treeIndex]
             if (item.table === 'links') followLink(item)
+            return true
+        }
+        case 'c': {
+            e.preventDefault()
+            const item = items[navState.treeIndex]
+            const record = getRecordForItem(item)
+            if (record) e.shiftKey ? copyRichLink(record) : copyUrl(record)
             return true
         }
         case 'PageUp':
@@ -465,4 +473,6 @@ export function initKeyboard() {
         if (handleGlobal(e)) return
         handleZone[navState.zone]?.(e)
     })
+
+    initCtrlTracking()
 }

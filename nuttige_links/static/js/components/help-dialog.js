@@ -37,6 +37,8 @@ class HelpDialog extends BaseDialog {
                     <dl>
                         <dt>Space</dt>       <dd>Collapse / expand section</dd>
                         <dt>Enter</dt>       <dd>Follow link (opens in new tab)</dd>
+                        <dt>c</dt>           <dd>Copy link URL</dd>
+                        <dt>Shift+c</dt>     <dd>Copy as rich link</dd>
                     </dl>
                 </section>
 
