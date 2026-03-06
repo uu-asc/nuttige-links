@@ -45,6 +45,7 @@ class HelpDialog extends BaseDialog {
                     <dl>
                         <dt>Space</dt>       <dd>Toggle checkbox</dd>
                         <dt>Shift+Space</dt> <dd>Extend selection to item</dd>
+                        <dt>Ctrl+A</dt>      <dd>Select all visible items</dd>
                         <dt>← / →</dt>       <dd>Navigate inline controls</dd>
                         <dt>Enter</dt>       <dd>Edit item</dd>
                         <dt>+</dt>           <dd>Add link at current position</dd>

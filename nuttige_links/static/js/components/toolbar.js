@@ -1,6 +1,7 @@
 import { store } from '../datastore.js'
 import { sync } from '../sync.js'
 import { computeVisibility } from '../behaviors/filter.js'
+import { selectAllVisible } from '../behaviors/selection.js'
 import { exportAll, importFromFile } from '../behaviors/import-export.js'
 
 class LinkToolbar extends HTMLElement {
@@ -18,6 +19,7 @@ class LinkToolbar extends HTMLElement {
                     <button data-action="reorder-sections">⇅ Sections</button>
                     <button data-action="add-link">+ Add link</button>
                     <button data-action="check-links" hidden>Check links</button>
+                    <button data-action="select-all">Select all</button>
                     <hr>
                     <button data-action="save-all" disabled>Save</button>
                     <button data-action="revert-all" disabled>Revert</button>
@@ -33,8 +35,9 @@ class LinkToolbar extends HTMLElement {
         this.linksOnlyBox = this.querySelector('[data-action="links-only"]')
         this.brokenOnlyBox = this.querySelector('[data-action="broken-only"]')
         this.checkBtn = this.querySelector('[data-action="check-links"]')
+        this.selectAllBtn = this.querySelector('[data-action="select-all"]')
         this.onstatusBtn = this.querySelector('[data-action="toggle-status"]')
-        this.statusBtn = this.querySelector('[data-action="toggle-status')
+        this.statusBtn = this.querySelector('[data-action="toggle-status"]')
         this.viewActions = this.querySelector('.view-actions')
         this.editActions = this.querySelector('.edit-actions')
         this.bulkBar = this.querySelector('bulk-actions-bar')
@@ -110,7 +113,9 @@ class LinkToolbar extends HTMLElement {
         })
 
         this.checkBtn.addEventListener('click', () => sync.checkLinks())
-
+        this.selectAllBtn.addEventListener('click', () => {
+            selectAllVisible(document.querySelector('link-tree'))
+        })
         this.statusBtn.addEventListener('click', () => {
             const next = !store.state.ui.showLinkStatus
             store.setState(['ui', 'showLinkStatus'], next)

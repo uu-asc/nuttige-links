@@ -1,7 +1,7 @@
 import { store } from '../datastore.js'
 import { getVisibleItems } from './visibility.js'
 import { markForDelete } from './actions.js'
-import { setSelectionAnchor, extendSelectionTo } from './selection.js'
+import { setSelectionAnchor, extendSelectionTo, selectAllVisible } from './selection.js'
 
 const navState = {
     zone: 'none',
@@ -129,6 +129,12 @@ const unguardedGlobal = {
     'ctrl+u': (e) => {
         e.preventDefault()
         document.querySelector('filter-input')?.resetAll()
+        return true
+    },
+    'ctrl+a': (e) => {
+        if (!store.state.ui.editMode) return false
+        e.preventDefault()
+        selectAllVisible(document.querySelector('link-tree'))
         return true
     },
 }

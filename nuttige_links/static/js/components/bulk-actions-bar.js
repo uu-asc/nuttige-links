@@ -1,7 +1,7 @@
 import { store } from '../datastore.js'
 import { sync } from '../sync.js'
 import { bulkMarkForDelete } from '../behaviors/actions.js'
-import { deselectAll, selectAllVisible } from '../behaviors/selection.js'
+import { deselectAll } from '../behaviors/selection.js'
 import { exportSelected } from '../behaviors/import-export.js'
 
 class BulkActionsBar extends HTMLElement {
@@ -44,13 +44,7 @@ class BulkActionsBar extends HTMLElement {
             })
         })
 
-        this._deselectBtn.addEventListener('click', () => {
-            store.batch(() => {
-                store.setState(['sections', 'checkedIds'], new Set())
-                store.setState(['subsections', 'checkedIds'], new Set())
-                store.setState(['links', 'checkedIds'], new Set())
-            })
-        })
+        this._deselectBtn.addEventListener('click', () => deselectAll())
 
         this._checkBtn.addEventListener('click', () => {
             const ids = [...store.state.links.checkedIds]
