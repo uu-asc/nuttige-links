@@ -36,6 +36,10 @@ const css = /*css*/`
     opacity: 0.3;
 }
 
+.sortable-item:active {
+    cursor: grabbing;
+}
+
 .sortable-item.insert-before {
     border-top-color: var(--fg-accent, highlight);
 }
