@@ -1,22 +1,22 @@
 :root {
     --hue: 63;
 
-    --bg: oklch(0.99 0.005 var(--hue));
+    --bg: oklch(0.99 0.008 var(--hue));
     --fg: oklch(0.15 0.01 var(--hue));
-    --bg-surface: oklch(0.97 0.005 var(--hue));
-    --bg-muted: oklch(0.93 0.008 var(--hue));
-    --bg-emphasis: oklch(0.89 0.008 var(--hue));
-    --bg-strong: oklch(0.82 0.01 var(--hue));
+    --bg-surface: oklch(0.97 0.018 var(--hue));
+    --bg-muted: oklch(0.93 0.020 var(--hue));
+    --bg-emphasis: oklch(0.89 0.020 var(--hue));
+    --bg-strong: oklch(0.82 0.022 var(--hue));
     --fg-accent: oklch(0.50 0.06 var(--hue));
 }
 
 [data-scheme="dark"] {
-    --bg: oklch(0.20 0.008 var(--hue));
+    --bg: oklch(0.20 0.025 var(--hue));
     --fg: oklch(0.90 0.008 var(--hue));
-    --bg-surface: oklch(0.24 0.008 var(--hue));
-    --bg-muted: oklch(0.28 0.01 var(--hue));
-    --bg-emphasis: oklch(0.33 0.01 var(--hue));
-    --bg-strong: oklch(0.40 0.012 var(--hue));
+    --bg-surface: oklch(0.24 0.018 var(--hue));
+    --bg-muted: oklch(0.28 0.020 var(--hue));
+    --bg-emphasis: oklch(0.33 0.020 var(--hue));
+    --bg-strong: oklch(0.40 0.022 var(--hue));
     --fg-accent: oklch(0.70 0.06 var(--hue));
 }
 
