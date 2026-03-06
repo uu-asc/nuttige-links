@@ -106,8 +106,8 @@ class LinkDialog extends BaseDialog {
                 }
             }
         } else if (config.mode === 'edit') {
-            const link = store.state.links.records[config.id]
-                ?? store.state.links.drafts[config.id]
+            const link = store.state.links.drafts[config.id]
+                ?? store.state.links.records[config.id]
             if (link) {
                 const sub = store.state.subsections.records[link.subsection_id]
                 if (sub?.section_id) {
