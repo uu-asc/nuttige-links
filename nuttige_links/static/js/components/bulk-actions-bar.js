@@ -2,6 +2,7 @@ import { store } from '../datastore.js'
 import { sync } from '../sync.js'
 import { bulkMarkForDelete } from '../behaviors/actions.js'
 import { deselectAll, selectAllVisible } from '../behaviors/selection.js'
+import { exportSelected } from '../behaviors/import-export.js'
 
 class BulkActionsBar extends HTMLElement {
     connectedCallback() {
@@ -10,6 +11,7 @@ class BulkActionsBar extends HTMLElement {
             <button data-action="edit">Edit</button>
             <button data-action="check" hidden>Check</button>
             <span data-ref="hint" hidden></span>
+            <button data-action="export">Export</button>
             <button data-action="delete">Delete</button>
             <hr>
             <button data-action="deselect">Deselect all</button>
@@ -20,6 +22,7 @@ class BulkActionsBar extends HTMLElement {
         this._checkBtn = this.querySelector('[data-action="check"]')
         this._hintEl = this.querySelector('[data-ref="hint"]')
         this._deleteBtn = this.querySelector('[data-action="delete"]')
+        this._exportBtn = this.querySelector('[data-action="export"]')
         this._deselectBtn = this.querySelector('[data-action="deselect"]')
 
         this._editBtn.addEventListener('click', () => {
@@ -53,6 +56,8 @@ class BulkActionsBar extends HTMLElement {
             const ids = [...store.state.links.checkedIds]
             if (ids.length) sync.checkLinks(ids)
         })
+
+        this._exportBtn.addEventListener('click', () => exportSelected())
 
         store.subscribe(
             s => s.ui.checkingLinks,

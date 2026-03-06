@@ -1,6 +1,7 @@
 import { store } from '../datastore.js'
 import { sync } from '../sync.js'
 import { computeVisibility } from '../behaviors/filter.js'
+import { exportAll, importFromFile } from '../behaviors/import-export.js'
 
 class LinkToolbar extends HTMLElement {
     connectedCallback() {
@@ -116,16 +117,8 @@ class LinkToolbar extends HTMLElement {
             this.statusBtn.classList.toggle('active', next)
         })
 
-        this.exportBtn.addEventListener('click', () => {
-            const data = sync.exportAll()
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = 'nuttige-links-export.json'
-            a.click()
-            URL.revokeObjectURL(url)
-        })
+        this.exportBtn.addEventListener('click', () => exportAll())
+        this.importBtn.addEventListener('click', () => importFromFile())
 
         store.subscribe(
             s => s.ui.checkingLinks,
