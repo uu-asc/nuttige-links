@@ -63,6 +63,10 @@ class LinkContent extends HTMLElement {
                     position-area: top;
                     margin-block: 0 .25rem;
                 }
+                .link-popover .title {
+                    font-weight: 600;
+                    margin-bottom: .125rem;
+                }
                 .link-popover .url {
                     opacity: 0.7;
                     color: var(--fg-accent);
@@ -71,8 +75,10 @@ class LinkContent extends HTMLElement {
                 .link-popover .desc {
                     margin-top: .25rem;
                 }
-                .link-popover .updated {
+                .link-popover .meta {
                     margin-top: .25rem;
+                    display: flex;
+                    justify-content: space-between;
                     opacity: 0.5;
                     font-size: .6125rem;
                 }
@@ -82,21 +88,29 @@ class LinkContent extends HTMLElement {
                 <a target="_blank" rel="noopener"></a>
             </span>
             <span class="link-popover" popover="manual">
+                <span class="title" hidden></span>
                 <span class="url"></span>
                 <span class="desc" hidden></span>
-                <span class="updated" hidden></span>
+                <span class="meta" hidden>
+                    <span class="status"></span>
+                    <span class="updated"></span>
+                </span>
             </span>
         `
         this._icon = this.shadowRoot.querySelector('.status-icon')
         this._anchor = this.shadowRoot.querySelector('a')
         this._popover = this.shadowRoot.querySelector('.link-popover')
+        this._popoverTitle = this._popover.querySelector('.title')
         this._popoverUrl = this._popover.querySelector('.url')
         this._popoverDesc = this._popover.querySelector('.desc')
-        this._popoverUpdated = this._popover.querySelector('.updated')
+        this._popoverMeta = this._popover.querySelector('.meta')
+        this._popoverStatus = this._popoverMeta.querySelector('.status')
+        this._popoverUpdated = this._popoverMeta.querySelector('.updated')
 
         this.addEventListener('mouseenter', () => this._showPopover())
         this.addEventListener('mouseleave', () => this._hidePopover())
         this._anchor.addEventListener('click', (e) => {
+            if (!this._anchor.href) return
             if (!(e.ctrlKey || e.metaKey)) return
             e.preventDefault()
             e.stopPropagation()
@@ -124,7 +138,11 @@ class LinkContent extends HTMLElement {
         this._popoverUrl.textContent = v ?? ''
     }
 
-    set text(v) { this._anchor.textContent = v ?? '' }
+    set text(v) {
+        this._anchor.textContent = v ?? ''
+        this._popoverTitle.textContent = v ?? ''
+        this._popoverTitle.hidden = !v
+    }
 
     set description(v) {
         this._popoverDesc.textContent = v ?? ''
@@ -132,15 +150,15 @@ class LinkContent extends HTMLElement {
     }
 
     set updatedAt(v) {
-        if (!v) {
-            this._popoverUpdated.hidden = true
-            return
-        }
-        this._popoverUpdated.textContent = `Updated: ${new Date(v).toLocaleDateString()}`
-        this._popoverUpdated.hidden = false
+        this._updatedAt = v ?? null
+        this._popoverUpdated.textContent = v
+            ? `Updated: ${new Date(v).toLocaleDateString()}`
+            : ''
+        this._syncMeta()
     }
 
     set status(v) {
+        // icon in main view
         if (v === null || v === undefined) {
             delete this._icon.dataset.status
         } else if (v >= 200 && v < 400) {
@@ -150,6 +168,15 @@ class LinkContent extends HTMLElement {
         } else {
             this._icon.dataset.status = 'broken'
         }
+
+        // text in popover
+        this._statusCode = v ?? null
+        this._popoverStatus.textContent = v != null ? `Status: ${v}` : ''
+        this._syncMeta()
+    }
+
+    _syncMeta() {
+        this._popoverMeta.hidden = this._statusCode == null && !this._updatedAt
     }
 
     _showPopover() {
