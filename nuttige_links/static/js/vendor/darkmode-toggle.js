@@ -12,7 +12,7 @@ const style = `
         &:hover {
             transform: scale(1.25);
         }
-        &:focus-within {
+        &:focus-visible {
             outline: 2px solid var(--fg-accent);
         }
     }
