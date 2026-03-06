@@ -10,6 +10,7 @@ const navState = {
     treeIndex: 0,
     controlIndex: null,
 }
+let hoveredItem = null // { table, id } — set by pointer, cleared on leave
 
 // --- focus helpers ---
 
@@ -336,6 +337,47 @@ function handleTree(e) {
         : handleTreeNormal(e)
 }
 
+function handleHover(e) {
+    if (!store.state.ui.editMode) return false
+    if (navState.zone === 'tree') return false
+    if (!hoveredItem) return false
+
+    const items = getVisibleItems(store.state)
+    const idx = items.findIndex(i => i.id === hoveredItem.id && i.table === hoveredItem.table)
+    if (idx === -1) return false
+
+    const item = items[idx]
+
+    switch (e.key) {
+        case ' ':
+            e.preventDefault()
+            if (e.shiftKey) {
+                extendSelectionTo(item.id, item.table, document.querySelector('link-tree'))
+            } else {
+                toggleCheck(item)
+            }
+            return true
+        case 'Enter':
+            e.preventDefault()
+            store.setState(['ui', 'dialog'], {
+                mode: 'edit', table: item.table, id: item.id,
+            })
+            return true
+        case '+':
+            e.preventDefault()
+            store.setState(['ui', 'dialog'], {
+                mode: 'add', table: 'links', defaults: resolveAddDefaults(item),
+            })
+            return true
+        case 'Delete':
+            e.preventDefault()
+            markForDelete(item.table, item.id)
+            return true
+    }
+
+    return false
+}
+
 // --- zone dispatch ---
 
 const handleZone = {
@@ -423,6 +465,17 @@ export function initKeyboard() {
     const header = document.querySelector('header')
     const tree = document.querySelector('link-tree')
 
+    // hover tracking for shortcut fallback
+    tree.addEventListener('pointerenter', (e) => {
+        const el = e.target.closest('[data-tree-item]')
+        if (el) hoveredItem = { table: el.dataset.table, id: el.getAttribute('record-id') }
+    }, true)
+
+    tree.addEventListener('pointerleave', (e) => {
+        const el = e.target.closest('[data-tree-item]')
+        if (el) hoveredItem = null
+    }, true)
+
     // sync zone on focus entry
     header.addEventListener('focusin', (e) => {
         navState.zone = 'header'
@@ -471,7 +524,8 @@ export function initKeyboard() {
     document.addEventListener('keydown', e => {
         if (store.state.ui.dialog) return
         if (handleGlobal(e)) return
-        handleZone[navState.zone]?.(e)
+        if (handleZone[navState.zone]?.(e)) return
+        handleHover(e)
     })
 
     initCtrlTracking()
