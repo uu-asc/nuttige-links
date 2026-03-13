@@ -87,6 +87,7 @@ const guardedGlobal = {
         return true
     },
     'e': (e) => {
+        if (!store.state.ui.canEdit) return false
         e.preventDefault()
         store.setState(['ui', 'editMode'], !store.state.ui.editMode)
         return true

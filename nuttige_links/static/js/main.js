@@ -33,6 +33,8 @@ export async function init(adapter) {
     sync.setAdapter(adapter)
 
     store.setState(['ui', 'canCheckLinks'], sync.capabilities.checkLinks ?? false)
+    store.setState(['ui', 'canEdit'], canEdit)
+    editBtn.hidden = !canEdit
 
     await sync.load('sections')
     await sync.load('subsections')
@@ -44,7 +46,10 @@ export async function init(adapter) {
     const saveBtn = document.querySelector('[data-action="save-all"]')
     const revertBtn = document.querySelector('[data-action="revert-all"]')
     const helpBtn = document.querySelector('[data-action="help"]')
+    const loginBtn = document.querySelector('[data-action="login"')
     const linkTree = document.querySelector('link-tree')
+
+    if (loginBtn) loginBtn.hidden = !!user
 
     store.subscribe(
         s => s.ui.editMode,
@@ -86,6 +91,10 @@ export async function init(adapter) {
 
     helpBtn.addEventListener('click', () => {
         store.setState(['ui', 'dialog'], { mode: 'help' })
+    })
+
+    loginBtn?.addEventListener('click', () => {
+        window.location = `/auth/login?next=${encodeURIComponent(window.location.pathname)}`
     })
 
     initKeyboard()
