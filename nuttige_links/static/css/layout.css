@@ -16,15 +16,15 @@ header {
     padding-inline: .5rem;
     align-items: center;
     gap: 1rem;
-    grid-template-columns: auto 1fr auto auto auto;
+    grid-template-columns: auto 1fr auto auto auto auto;
     grid-template-areas:
-        "head tool edit help dark";
+        "head tool edit help auth dark";
 
     @media (width < 1200px) {
         grid-template-columns: 1fr auto auto auto;
         grid-template-areas:
-            "head edit help dark"
-            "tool tool tool tool";
+            "head edit help auth dark"
+            "tool tool tool tool tool";
         row-gap: 0;
         padding-bottom: .5rem;
     }
@@ -51,6 +51,10 @@ header {
 
     [data-action="help"] {
         grid-area: help;
+    }
+
+    [data-action="login"], [data-action="logout"] {
+        grid-area: auth;
     }
 }
 
