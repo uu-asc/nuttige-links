@@ -7,8 +7,8 @@ let authUser = null
 let fetchFn = fetch
 
 try {
-    await authInit('nuttige-links')
-    canEdit = hasPermission('editor')
+    await authInit()
+    canEdit = hasPermission('nuttige-links', 'editor')
     authUser = user()
     fetchFn = authFetch
 } catch {
