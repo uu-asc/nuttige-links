@@ -1,6 +1,6 @@
 import { createFetchAdapter } from './adapters/fetch-adapter.js'
 import { init } from './main.js'
-import { init as authInit, hasPermission, user, authFetch } from '/shared/auth.js'
+import { init as authInit, hasPermission, user, authFetch } from '/shared/js/auth.js'
 
 let canEdit = true
 let authUser = null
