@@ -106,6 +106,7 @@ export async function init(adapter, { canEdit = true, user = null } = {}) {
     })
 
     initKeyboard()
+    document.body.classList.add('ready')
 
     console.log('Loaded:', {
         sections: Object.keys(store.state.sections.records).length,

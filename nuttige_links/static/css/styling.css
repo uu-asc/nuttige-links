@@ -39,6 +39,10 @@ body {
     font-size: .875em;
 }
 
+body:not(.ready) {
+    opacity: 0
+}
+
 :where(.container-header, link-item) {
     border-radius: 5px;
 
