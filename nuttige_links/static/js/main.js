@@ -29,7 +29,7 @@ function isDirty(state) {
         || isTableDirty(state, 'links')
 }
 
-export async function init(adapter, { canEdit = true, user = null } = {}) {
+export async function init(adapter, { canEdit = true } = {}) {
     sync.setAdapter(adapter)
 
     store.setState(['ui', 'canCheckLinks'], sync.capabilities.checkLinks ?? false)
@@ -44,20 +44,10 @@ export async function init(adapter, { canEdit = true, user = null } = {}) {
     const saveBtn = document.querySelector('[data-action="save-all"]')
     const revertBtn = document.querySelector('[data-action="revert-all"]')
     const helpBtn = document.querySelector('[data-action="help"]')
-    const loginBtn = document.querySelector('[data-action="login"')
     const linkTree = document.querySelector('link-tree')
-    const logoutBtn = document.querySelector('[data-action="logout"]')
 
     store.setState(['ui', 'canEdit'], canEdit)
     editBtn.hidden = !canEdit
-
-    if (loginBtn) loginBtn.hidden = !!user
-    if (logoutBtn) {
-        logoutBtn.hidden = !user
-        logoutBtn.addEventListener('click', () => {
-            window.location = '/auth/logout'
-        })
-    }
 
     store.subscribe(
         s => s.ui.editMode,
@@ -99,10 +89,6 @@ export async function init(adapter, { canEdit = true, user = null } = {}) {
 
     helpBtn.addEventListener('click', () => {
         store.setState(['ui', 'dialog'], { mode: 'help' })
-    })
-
-    loginBtn?.addEventListener('click', () => {
-        window.location = `/auth/login?next=${encodeURIComponent(window.location.pathname)}`
     })
 
     initKeyboard()
